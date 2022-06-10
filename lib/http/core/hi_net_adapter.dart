@@ -13,9 +13,13 @@ class HiNetResponse<T> {
   final BaseRequest? request;
   final int statusCode;
   final dynamic extra; //额外数据
-
+  final String? statusMessage;
   HiNetResponse(
-      {required this.data, required this.statusCode, this.request, this.extra});
+      {required this.data,
+      required this.statusCode,
+      this.statusMessage,
+      this.request,
+      this.extra});
 
   @override
   String toString() {

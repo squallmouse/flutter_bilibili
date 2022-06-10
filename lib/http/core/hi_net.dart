@@ -1,3 +1,4 @@
+import 'package:bili/http/core/dio_adapter.dart';
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/core/hi_net_adapter.dart';
 import 'package:bili/http/core/mock_adapter.dart';
@@ -53,7 +54,8 @@ class HiNet {
 
   // send 请求
   Future<HiNetResponse> send<T>(BaseRequest request) async {
-    MockAdapter adapter = MockAdapter();
+    // MockAdapter adapter = MockAdapter();
+    DioAdapter adapter = DioAdapter();
     return adapter.send(request);
   }
 
