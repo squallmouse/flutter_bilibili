@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     TestRequest request = TestRequest();
     request.add("aa", "aaa").add("bb", "bbb");
     var result = await HiNet.getInstance().fire(request);
-    print(result);
+    print("result --> $result");
   }
 
   @override
