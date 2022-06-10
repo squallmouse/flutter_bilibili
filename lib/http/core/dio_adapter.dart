@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/core/hi_net_adapter.dart';
 import 'package:bili/http/requst/base_request.dart';
@@ -47,4 +49,17 @@ class DioAdapter extends HiNetAdapter {
       statusMessage: response.statusMessage,
     );
   }
+}
+
+/// json Map 互相转换
+void test() {
+  const jsonString =
+      "{ \"name\": \"flutter\", \"url\": \"https://coding.imooc.com/class/487.html\" }";
+  //json 转map
+  Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+  print('name:${jsonMap['name']}');
+  print('url:${jsonMap['url']}');
+  //map 转json
+  String json = jsonEncode(jsonMap);
+  print('json:$json');
 }
