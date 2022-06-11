@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   dio: ^4.0.6 # 网络请求  
+  shared_preferences: ^2.0.15 # 本地存储
 
 
   # The following adds the Cupertino Icons font to your application.
