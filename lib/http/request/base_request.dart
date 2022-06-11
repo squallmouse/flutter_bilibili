@@ -9,7 +9,14 @@ abstract class BaseRequest {
   var pathParams; // 路径
   var useHttps = true; // 是否使用https
   Map<String, String> params = Map(); //参数
-  Map<String, dynamic> header = Map(); // 请求头参数
+  // Map<String, dynamic> header = Map(); // 请求头参数
+
+  Map<String, dynamic> header = {
+    'course-flag': 'fa',
+    //访问令牌，在课程公告获取
+    "auth-token": "ZmEtMjAyMS0wNC0xMiAyMToyMjoyMC1mYQ==fa",
+  };
+
   // 获取主域名
   String get authority {
     return MAINURL;

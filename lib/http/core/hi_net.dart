@@ -2,7 +2,7 @@ import 'package:bili/http/core/dio_adapter.dart';
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/core/hi_net_adapter.dart';
 import 'package:bili/http/core/mock_adapter.dart';
-import 'package:bili/http/requst/base_request.dart';
+import 'package:bili/http/request/base_request.dart';
 
 class HiNet {
   HiNet._();
@@ -21,6 +21,7 @@ class HiNet {
     var error;
     try {
       response = await send(request);
+      print("------");
     } on HiNetError catch (e) {
       error = e;
       response = e.data;
@@ -34,6 +35,7 @@ class HiNet {
     if (response == null) {
       printLog("response : 为空     |$error");
     }
+    // 只返回有用的数据
     var result = response?.data;
     printLog("result --> $result");
     var status = response?.statusCode;
@@ -47,7 +49,7 @@ class HiNet {
       case 403:
         throw NeedAuth(result.toString());
       default:
-        throw HiNetError(status!, result.toString());
+        throw HiNetError(status ?? -999, result.toString());
         break;
     }
   }

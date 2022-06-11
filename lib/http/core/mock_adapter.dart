@@ -1,5 +1,5 @@
 import 'package:bili/http/core/hi_net_adapter.dart';
-import 'package:bili/http/requst/base_request.dart';
+import 'package:bili/http/request/base_request.dart';
 
 class MockAdapter extends HiNetAdapter {
   @override

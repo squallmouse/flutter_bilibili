@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bili/http/requst/base_request.dart';
+import 'package:bili/http/request/base_request.dart';
 
 /// 网络请求抽象类
 abstract class HiNetAdapter {

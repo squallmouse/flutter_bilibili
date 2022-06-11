@@ -1,6 +1,12 @@
+import 'package:bili/db/hi_cache.dart';
+import 'package:bili/http/core/dio_adapter.dart';
 import 'package:bili/http/core/hi_net.dart';
-import 'package:bili/http/requst/test_request.dart';
+import 'package:bili/http/dao/login_dao.dart';
+import 'package:bili/http/request/test_request.dart';
 import 'package:flutter/material.dart';
+
+// Tom2
+// 123
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +18,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //  数据缓存初始化
+    HiCache.preInit();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -53,10 +62,19 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() async {
-    TestRequest request = TestRequest();
-    request.add("aa", "aaa").add("bb", "bbb").add("requestPrams", "333");
-    var result = await HiNet.getInstance().fire(request);
-    print("result --> $result");
+    setState(() {
+      _counter++;
+    });
+
+    var res = await LoginDao.login("18404969231", "wkl123456");
+    print(res);
+  }
+
+  text() {
+    print("in test()");
+    // await HiCache.getInstance().setString("test", "valuse ++ ");
+    print("---> ${HiCache.getInstance()}");
+    print("out test()");
   }
 
   @override

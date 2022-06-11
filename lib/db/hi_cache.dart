@@ -19,6 +19,7 @@ class HiCache {
     if (_instance == null) {
       _instance = HiCache._();
     }
+
     return _instance!;
   }
 

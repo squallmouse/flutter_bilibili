@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/core/hi_net_adapter.dart';
-import 'package:bili/http/requst/base_request.dart';
+import 'package:bili/http/request/base_request.dart';
 import 'package:dio/dio.dart';
 
 class DioAdapter extends HiNetAdapter {
@@ -19,8 +19,8 @@ class DioAdapter extends HiNetAdapter {
         response = (await Dio().get(request.url(), options: options));
       } else if (request.httpMethod == HttpMethod.POST) {
         //POST
-        response = (await Dio()
-            .post(request.url(), options: options, data: request.params));
+        response = await Dio()
+            .post(request.url(), options: options, data: request.params);
       } else if (request.httpMethod == HttpMethod.DELETE) {
         //DELETE
         response = (await Dio()
@@ -33,7 +33,7 @@ class DioAdapter extends HiNetAdapter {
 
     if (error != null) {
       //抛出HiNetError
-      throw HiNetError(response?.status.Code ?? -1, error.toString(),
+      throw HiNetError(response?.statusCode ?? -1, error.toString(),
           data: _buildRes(response, request));
     }
 
@@ -52,14 +52,14 @@ class DioAdapter extends HiNetAdapter {
 }
 
 /// json Map 互相转换
-void test() {
-  const jsonString =
-      "{ \"name\": \"flutter\", \"url\": \"https://coding.imooc.com/class/487.html\" }";
-  //json 转map
-  Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-  print('name:${jsonMap['name']}');
-  print('url:${jsonMap['url']}');
-  //map 转json
-  String json = jsonEncode(jsonMap);
-  print('json:$json');
-}
+// void test() {
+//   const jsonString =
+//       "{ \"name\": \"flutter\", \"url\": \"https://coding.imooc.com/class/487.html\" }";
+//   //json 转map
+//   Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+//   print('name:${jsonMap['name']}');
+//   print('url:${jsonMap['url']}');
+//   //map 转json
+//   String json = jsonEncode(jsonMap);
+//   print('json:$json');
+// }
