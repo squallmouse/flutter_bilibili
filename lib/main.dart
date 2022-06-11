@@ -2,6 +2,7 @@ import 'package:bili/db/hi_cache.dart';
 import 'package:bili/http/core/dio_adapter.dart';
 import 'package:bili/http/core/hi_net.dart';
 import 'package:bili/http/dao/login_dao.dart';
+import 'package:bili/http/dao/notice_dao.dart';
 import 'package:bili/http/request/test_request.dart';
 import 'package:flutter/material.dart';
 
@@ -66,8 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
 
-    var res = await LoginDao.login("18404969231", "wkl123456");
-    print(res);
+    // var res = await LoginDao.login("18404969231", "wkl123456");
+    // print(res);
+    // String token = LoginDao.getBoardingPass();
+    // print("获取的 token = ${token}");
+
+    var res = await NoticeDao.getNotice();
+    print("res = ${res}");
   }
 
   text() {

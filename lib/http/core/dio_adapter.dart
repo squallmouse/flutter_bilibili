@@ -40,6 +40,7 @@ class DioAdapter extends HiNetAdapter {
     return _buildRes(response, request);
   }
 
+  // 创建 HiNetResponse 实例作为返回结果
   _buildRes(Response response, BaseRequest request) {
     return HiNetResponse(
       data: response.data,

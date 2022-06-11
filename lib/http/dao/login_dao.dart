@@ -42,4 +42,8 @@ class LoginDao {
     // 返回结果
     return result;
   }
+
+  static getBoardingPass() {
+    return HiCache.getInstance().get(BOARDING_PASS);
+  }
 }

@@ -21,7 +21,7 @@ class HiNet {
     var error;
     try {
       response = await send(request);
-      print("------");
+      print("------ hi_net fire : 等到请求结果了");
     } on HiNetError catch (e) {
       error = e;
       response = e.data;

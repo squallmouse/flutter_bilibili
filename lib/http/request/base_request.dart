@@ -1,3 +1,5 @@
+import 'package:bili/http/dao/login_dao.dart';
+
 enum HttpMethod { GET, POST, DELETE }
 
 const MAINURL = "api.devio.org";
@@ -46,14 +48,19 @@ abstract class BaseRequest {
     } else {
       uri = Uri.http(authority, pathStr, params);
     }
+    // 添加token到请求头
+    if (needLogin()) {
+      this.addHeader(LoginDao.BOARDING_PASS, LoginDao.getBoardingPass());
+    }
     // 打印请求的url
-    print("url = ${uri.toString()}");
+    print("请求的 url = -->  ${uri.toString()}  <--");
     return uri.toString();
   }
 
   /// 添加参数
   BaseRequest add(String key, Object value) {
     params[key] = value.toString();
+    // params[key] = value;
     return this; // 返回this.方便用.语法
   }
 
