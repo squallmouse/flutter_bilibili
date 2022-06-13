@@ -1,5 +1,4 @@
 import 'package:bili/http/core/hi_net.dart';
-import 'package:bili/http/core/hi_net_adapter.dart';
 import 'package:bili/http/request/notice_request.dart';
 
 class NoticeDao {

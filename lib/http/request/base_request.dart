@@ -50,6 +50,7 @@ abstract class BaseRequest {
     }
     // 添加token到请求头
     if (needLogin()) {
+      print("--> 添加了login token 到请求头 <--");
       this.addHeader(LoginDao.BOARDING_PASS, LoginDao.getBoardingPass());
     }
     // 打印请求的url
