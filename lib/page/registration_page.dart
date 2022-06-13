@@ -5,22 +5,51 @@ import 'package:bili/widget/login_input.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
-  final VoidCallback onJumpToLogin;
   const RegistrationPage({Key? key, required this.onJumpToLogin})
       : super(key: key);
+
+  final VoidCallback onJumpToLogin;
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  bool protect = false; // 图片是否挡着眼睛
-  bool loginEnable = false; // 注册按钮是否能点击
-  String userName = "";
-  String password = "";
-  String rePassword = "";
   String imoocId = "";
+  bool loginEnable = false; // 注册按钮是否能点击
   String orderId = "";
+  String password = "";
+  bool protect = false; // 图片是否挡着眼睛
+  String rePassword = "";
+  String userName = "";
+
+  _checkInput() {
+    bool enable;
+
+    if (userName.isNotEmpty &&
+        password.isNotEmpty &&
+        rePassword.isNotEmpty &&
+        imoocId.isNotEmpty &&
+        orderId.isNotEmpty) {
+      enable = true;
+    } else {
+      enable = false;
+    }
+
+    setState(() {
+      loginEnable = enable;
+    });
+  }
+
+  // _send 发送登陆的请求 假请求 ;只要两次密码相等 就直接通过
+  void _send() {
+    Future.delayed(Duration(seconds: 2), () {
+      print("假请求  发送");
+    }).then((value) {
+      print("假请求  直接成功!!!!");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,32 +124,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
               "注册",
               loginEnable,
               onClick: () {
-                print("注册按钮点击");
+                // print("注册按钮点击");
+                _send();
               },
             ),
           ],
         ),
       ),
     );
-  }
-
-  _checkInput() {
-    bool enable;
-
-    if (userName.isNotEmpty &&
-        password.isNotEmpty &&
-        rePassword.isNotEmpty &&
-        imoocId.isNotEmpty &&
-        orderId.isNotEmpty) {
-      enable = true;
-      print("可以按钮点击了");
-    } else {
-      enable = false;
-      print("enable = false");
-    }
-
-    setState(() {
-      loginEnable = enable;
-    });
   }
 }

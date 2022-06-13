@@ -4,6 +4,7 @@ import 'package:bili/http/core/hi_net.dart';
 import 'package:bili/http/dao/login_dao.dart';
 import 'package:bili/http/dao/notice_dao.dart';
 import 'package:bili/http/request/test_request.dart';
+import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:bili/util/color.dart';
@@ -26,9 +27,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: themeColorWhite,
       ),
-      home: RegistrationPage(
-        onJumpToLogin: () {},
-      ),
+      home: LoginPage(),
+      //  RegistrationPage(onJumpToLogin: () {}),
       //const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
