@@ -4,127 +4,135 @@ import 'package:bili/http/core/hi_net.dart';
 import 'package:bili/http/dao/login_dao.dart';
 import 'package:bili/http/dao/notice_dao.dart';
 import 'package:bili/http/request/test_request.dart';
+import 'package:bili/model/video_model.dart';
+import 'package:bili/page/home_page.dart';
 import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
+import 'package:bili/page/video_detail_page.dart';
+import 'package:bili/util/my_log.dart';
 import 'package:flutter/material.dart';
 import 'package:bili/util/color.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(BiliApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class BiliApp extends StatefulWidget {
+  BiliApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<BiliApp> createState() => _BiliAppState();
+}
+
+class _BiliAppState extends State<BiliApp> {
+  BiliRouteDelegate _routeDelegate = BiliRouteDelegate();
+  BiliRouteInformationParser _routeInformationParser =
+      BiliRouteInformationParser();
+
   @override
   Widget build(BuildContext context) {
-    //  数据缓存初始化
-    HiCache.preInit();
-
+    var widget2 = Router(
+      routerDelegate: _routeDelegate,
+      routeInformationParser: _routeInformationParser,
+      routeInformationProvider: PlatformRouteInformationProvider(
+        initialRouteInformation: RouteInformation(location: "/"),
+      ),
+    );
+    print("widget2 = ${widget2}");
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: themeColorWhite,
-      ),
-      home: LoginPage(),
-      //  RegistrationPage(onJumpToLogin: () {}),
-      //const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: "flutter demo",
+      theme: ThemeData(primaryColor: themeColorWhite),
+      debugShowCheckedModeBanner: false,
+      home: widget2,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() async {
-    setState(() {
-      _counter++;
-    });
-
-    // var res = await LoginDao.login("18404969231", "wkl123456");
-    // print(res);
-    // String token = LoginDao.getBoardingPass();
-    // print("获取的 token = ${token}");
-
-    var res = await NoticeDao.getNotice();
-    print("res = ${res}");
-  }
-
-  text() {
-    print("in test()");
-    // await HiCache.getInstance().setString("test", "valuse ++ ");
-    print("---> ${HiCache.getInstance()}");
-    print("out test()");
-  }
-
+class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<BiliRoutePath> {
+  //定义一个key,可以通过navigatorkey.currentState来获取navigatorState对象
+  // final GlobalKey<NavigatorState>? navigatorKey;
+  // // // 初始化
+  // BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+  // @override
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  // 存放所有页面
+  List<MaterialPage> pages = [];
+  VideoModel? videoModel;
+  BiliRoutePath? path;
+  //*  ------------------------------ */
+  //*   方法
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    myLog("build 方法", StackTrace.current);
+    // 构建路由栈
+    pages = [
+      pageWrap(HomePage(
+        onJumpToDetail: (model) {
+          this.videoModel = model;
+
+          notifyListeners(); //通知数据变化
+          myLog("通知数据变化", StackTrace.current);
+        },
+      )),
+      if (this.videoModel != null)
+        pageWrap(VideoDetailPage(
+          videoModel: this.videoModel!,
+        ))
+    ];
+    // 创建Navigator 作为路由的管理者
+    return Navigator(
+      key: navigatorKey,
+      pages: pages,
+      // 当路由被pop时, onPopPage会被调用
+      onPopPage: (Route<dynamic> route, dynamic result) {
+        //在这里控制是否可以返回
+        if (!route.didPop(result)) {
+          return false;
+        }
+        return true;
+      },
     );
   }
+
+  // @override
+  // // TODO: implement navigatorKey
+  // GlobalKey<NavigatorState>? get navigatorKey => throw UnimplementedError();
+
+  @override
+  Future<void> setNewRoutePath(BiliRoutePath configuration) async {
+    myLog("setNewRoutePath 方法  ${configuration}", StackTrace.current);
+    this.path = configuration;
+  }
+}
+
+///定义路由数据 path
+class BiliRoutePath {
+  final String? location;
+  BiliRoutePath.home() : location = "/";
+  BiliRoutePath.detail() : location = "/detail";
+}
+
+/// 可缺省,主要用于 web
+class BiliRouteInformationParser extends RouteInformationParser<BiliRoutePath> {
+  @override
+  Future<BiliRoutePath> parseRouteInformation(
+      RouteInformation routeInformation) async {
+    final uri = Uri.parse(routeInformation.location!);
+    print("uri:${uri}");
+    //判断长度 // 根据长度来返回页面
+    if (uri.pathSegments.length == 0) {
+      return BiliRoutePath.home();
+    }
+    return BiliRoutePath.detail();
+  }
+}
+
+// 创建页面
+pageWrap(Widget child) {
+  myLog("pageWrap", StackTrace.current);
+  return MaterialPage(
+    child: child,
+    key: ValueKey(child.hashCode),
+  );
 }
