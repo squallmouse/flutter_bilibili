@@ -7,7 +7,9 @@ import 'package:bili/widget/login_input.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  final VoidCallback onJumpToRegistrationPage;
+  LoginPage({Key? key, required this.onJumpToRegistrationPage})
+      : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -21,9 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar("登陆", "注册", () {
-        print("登陆page -->注册按钮click : 去到注册页面");
-      }),
+      appBar:
+          appbar("登陆", "注册", rightButtonClick: widget.onJumpToRegistrationPage),
       body: Container(
         child: ListView(
           children: [

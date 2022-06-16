@@ -5,6 +5,7 @@ import 'package:bili/http/dao/login_dao.dart';
 import 'package:bili/http/dao/notice_dao.dart';
 import 'package:bili/http/request/test_request.dart';
 import 'package:bili/model/video_model.dart';
+import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/home_page.dart';
 import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
@@ -27,8 +28,6 @@ class BiliApp extends StatefulWidget {
 
 class _BiliAppState extends State<BiliApp> {
   BiliRouteDelegate _routeDelegate = BiliRouteDelegate();
-  BiliRouteInformationParser _routeInformationParser =
-      BiliRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {
@@ -37,71 +36,89 @@ class _BiliAppState extends State<BiliApp> {
       initialData: null,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         var widget2;
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          widget2 = CupertinoActivityIndicator();
-        } else {
-          // done 完成
+        if (snapshot.connectionState == ConnectionState.done) {
           widget2 = Router(
             routerDelegate: _routeDelegate,
-            routeInformationParser: _routeInformationParser,
-            routeInformationProvider: PlatformRouteInformationProvider(
-              initialRouteInformation: RouteInformation(location: "/"),
-            ),
           );
+        } else {
+          widget2 = Scaffold(body: CupertinoActivityIndicator());
         }
         return MaterialApp(
           title: "flutter demo",
-          theme: ThemeData(primaryColor: themeColorWhite),
+          theme: ThemeData(primarySwatch: themeColorWhite),
+          // primaryColor的值是一个Color类型的，为所有的Widget 提供基础颜色；
+// primarySwatch的值是一个MaterialColor类型，而不是Color类型的，主要为Material 系列组件提供基础色
           debugShowCheckedModeBanner: false,
           home: widget2,
         );
       },
     );
-    // var widget2 = Router(
-    //   routerDelegate: _routeDelegate,
-    //   routeInformationParser: _routeInformationParser,
-    //   routeInformationProvider: PlatformRouteInformationProvider(
-    //     initialRouteInformation: RouteInformation(location: "/"),
-    //   ),
-    // );
-    // print("widget2 = ${widget2}");
-    // return
   }
 }
 
 /// bilibili 路由delegate
-class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<BiliRoutePath> {
-  //定义一个key,可以通过navigatorkey.currentState来获取navigatorState对象
-  // final GlobalKey<NavigatorState>? navigatorKey;
-  // // // 初始化
-  // BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
-  // @override
+class BiliRouteDelegate extends RouterDelegate
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   // 存放所有页面
   List<MaterialPage> pages = [];
+  RouteStatus _routeStatus = RouteStatus.home; //默认为首页
   VideoModel? videoModel;
-  BiliRoutePath? path;
+
+  bool get hasLogin => LoginDao.getBoardingPass() != null;
+
+  RouteStatus get routeStatus {
+    if (_routeStatus != RouteStatus.registration && !hasLogin) {
+      return _routeStatus = RouteStatus.login;
+    } else if (videoModel != null) {
+      return _routeStatus = RouteStatus.detail;
+    } else {
+      return _routeStatus;
+    }
+  }
+
   //*  ------------------------------ */
   //*   方法
   @override
   Widget build(BuildContext context) {
     myLog("build 方法", StackTrace.current);
-    // 构建路由栈
-    pages = [
-      pageWrap(HomePage(
+    // 构建路由栈 : page中装的是一个完整的页面
+    var index = getPageIndex(pages, routeStatus);
+    // 临时的pages
+    var tempPages = pages;
+    if (index != -1) {
+      // 说明栈中已经有了该页面
+      // 把本页面 和 以上的页面都 出栈
+      // pop 不走这个方法,会直接出栈一个页面
+      tempPages = tempPages.sublist(0, index);
+    }
+    var page;
+    if (routeStatus == RouteStatus.home) {
+      tempPages.clear(); //清理干净
+      page = pageWrap(HomePage(
         onJumpToDetail: (model) {
           this.videoModel = model;
-
-          notifyListeners(); //通知数据变化
+          notifyListeners(); //通知数据变化了
           myLog("通知数据变化", StackTrace.current);
         },
-      )),
-      if (this.videoModel != null)
-        pageWrap(VideoDetailPage(
-          videoModel: this.videoModel!,
-        ))
-    ];
+      ));
+    } else if (routeStatus == RouteStatus.detail) {
+      page = pageWrap(VideoDetailPage(videoModel: this.videoModel!));
+    } else if (routeStatus == RouteStatus.registration) {
+      page = pageWrap(RegistrationPage(onJumpToLogin: () {
+        _routeStatus = RouteStatus.login;
+        notifyListeners();
+      }));
+    } else if (routeStatus == RouteStatus.login) {
+      page = pageWrap(LoginPage(onJumpToRegistrationPage: () {
+        _routeStatus = RouteStatus.registration;
+        notifyListeners();
+      }));
+    }
+    //
+    tempPages = [...tempPages, page];
+    pages = tempPages;
+    //
     // 创建Navigator 作为路由的管理者
     return Navigator(
       key: navigatorKey,
@@ -118,39 +135,23 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
   }
 
   @override
-  Future<void> setNewRoutePath(BiliRoutePath configuration) async {
-    myLog("setNewRoutePath 方法  ${configuration}", StackTrace.current);
-    this.path = configuration;
+  Future<void> setNewRoutePath(configuration) async {
+    myLog("setNewRoutePath 应该是永远永不到了吧....", StackTrace.current);
   }
 }
 
 ///定义路由数据 path
-class BiliRoutePath {
-  final String? location;
-  BiliRoutePath.home() : location = "/";
-  BiliRoutePath.detail() : location = "/detail";
-}
+// class BiliRoutePath {
+//   final String? location;
+//   BiliRoutePath.home() : location = "/";
+//   BiliRoutePath.detail() : location = "/detail";
+// }
 
-/// 可缺省,主要用于 web
-class BiliRouteInformationParser extends RouteInformationParser<BiliRoutePath> {
-  @override
-  Future<BiliRoutePath> parseRouteInformation(
-      RouteInformation routeInformation) async {
-    final uri = Uri.parse(routeInformation.location!);
-    print("uri:${uri}");
-    //判断长度 // 根据长度来返回页面
-    if (uri.pathSegments.length == 0) {
-      return BiliRoutePath.home();
-    }
-    return BiliRoutePath.detail();
-  }
-}
-
-// 创建页面
-pageWrap(Widget child) {
-  myLog("pageWrap", StackTrace.current);
-  return MaterialPage(
-    child: child,
-    key: ValueKey(child.hashCode),
-  );
-}
+// // 创建页面
+// pageWrap(Widget child) {
+//   myLog("pageWrap", StackTrace.current);
+//   return MaterialPage(
+//     child: child,
+//     key: ValueKey(child.hashCode),
+//   );
+// }

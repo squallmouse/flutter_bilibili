@@ -53,9 +53,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar("注册", "登陆", () {
-        print("right button click!!");
-      }),
+      appBar: appbar("注册", "登陆", rightButtonClick: widget.onJumpToLogin),
       body: Container(
         child: ListView(
           children: [
