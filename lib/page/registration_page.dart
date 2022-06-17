@@ -1,3 +1,4 @@
+import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/widget/appbar.dart';
 import 'package:bili/widget/login_button.dart';
 import 'package:bili/widget/login_effect.dart';
@@ -5,10 +6,9 @@ import 'package:bili/widget/login_input.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key, required this.onJumpToLogin})
-      : super(key: key);
+  const RegistrationPage({Key? key}) : super(key: key);
 
-  final VoidCallback onJumpToLogin;
+  // final VoidCallback onJumpToLogin;
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -46,14 +46,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
     Future.delayed(Duration(seconds: 2), () {
       print("假请求  发送");
     }).then((value) {
-      print("假请求  直接成功!!!!");
+      print("假请求  直接成功!!!! -- 重新登陆下");
+      HiNavigator.getInstance().onJumpTo(RouteStatus.login);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appbar("注册", "登陆", rightButtonClick: widget.onJumpToLogin),
+      appBar: appbar("注册", "登陆",
+          rightButtonClick: () =>
+              HiNavigator.getInstance().onJumpTo(RouteStatus.login)),
       body: Container(
         child: ListView(
           children: [

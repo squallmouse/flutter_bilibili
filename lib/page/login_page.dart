@@ -1,4 +1,5 @@
 import 'package:bili/http/dao/login_dao.dart';
+import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/util/toast.dart';
 import 'package:bili/widget/appbar.dart';
 import 'package:bili/widget/login_button.dart';
@@ -7,9 +8,8 @@ import 'package:bili/widget/login_input.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback onJumpToRegistrationPage;
-  LoginPage({Key? key, required this.onJumpToRegistrationPage})
-      : super(key: key);
+  // final VoidCallback onJumpToRegistrationPage;
+  LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -23,8 +23,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          appbar("登陆", "注册", rightButtonClick: widget.onJumpToRegistrationPage),
+      appBar: appbar("登陆", "注册",
+          rightButtonClick: () =>
+              HiNavigator.getInstance().onJumpTo(RouteStatus.registration)),
       body: Container(
         child: ListView(
           children: [
@@ -95,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
       print("-------  登陆  ------");
       print(res["msg"]);
       print("data --> ${res["data"]}");
+      HiNavigator.getInstance().onJumpTo(RouteStatus.home);
       print("-------  end   ------");
       showToast(res["msg"]);
     }

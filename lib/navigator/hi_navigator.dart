@@ -56,3 +56,46 @@ class RouteStatusInfo {
     required this.page,
   });
 }
+
+/// 抽象类
+abstract class _RouteJumpListener {
+  void onJumpTo(RouteStatus routeStatus, {Map? args});
+}
+
+typedef OnJumpTo = void Function(RouteStatus routeStatus, {Map? args});
+
+///定义路由跳转逻辑要实现的功能
+class RouteJumpListener {
+  final OnJumpTo onJumpTo;
+  RouteJumpListener({required this.onJumpTo});
+}
+
+///监听路由页面跳转
+///感知当前页面是否压后台
+class HiNavigator extends _RouteJumpListener {
+  //*  ------------------------------ */
+  //*  属性
+  late RouteJumpListener _routeJumpListener;
+//*  ------------------------------ */
+//*  单例
+  static HiNavigator? _instance;
+  HiNavigator._();
+  static HiNavigator getInstance() {
+    if (_instance == null) {
+      _instance = HiNavigator._();
+    }
+    return _instance!;
+  }
+
+  //*  ------------------------------ */
+  //*  方法
+  @override
+  void onJumpTo(RouteStatus routeStatus, {Map? args}) {
+    _routeJumpListener.onJumpTo(routeStatus, args: args);
+  }
+
+  // 注册 _routeJumpListener
+  void registerRouteJump(RouteJumpListener routeJumpListener) {
+    _routeJumpListener = routeJumpListener;
+  }
+}

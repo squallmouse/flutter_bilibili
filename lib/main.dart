@@ -11,6 +11,7 @@ import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
 import 'package:bili/page/video_detail_page.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/util/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bili/util/color.dart';
@@ -60,6 +61,23 @@ class _BiliAppState extends State<BiliApp> {
 class BiliRouteDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  // 初始化方法
+  BiliRouteDelegate() {
+// 实现路由跳转逻辑
+    HiNavigator.getInstance().registerRouteJump(
+      RouteJumpListener(
+        onJumpTo: (RouteStatus routeStatus, {Map? args}) {
+          _routeStatus = routeStatus;
+
+          if (routeStatus == RouteStatus.detail) {
+            this.videoModel = args?['videlmo'];
+          }
+          notifyListeners();
+        },
+      ),
+    );
+  }
+
   // 存放所有页面
   List<MaterialPage> pages = [];
   RouteStatus _routeStatus = RouteStatus.home; //默认为首页
@@ -95,25 +113,13 @@ class BiliRouteDelegate extends RouterDelegate
     var page;
     if (routeStatus == RouteStatus.home) {
       tempPages.clear(); //清理干净
-      page = pageWrap(HomePage(
-        onJumpToDetail: (model) {
-          this.videoModel = model;
-          notifyListeners(); //通知数据变化了
-          myLog("通知数据变化", StackTrace.current);
-        },
-      ));
+      page = pageWrap(HomePage());
     } else if (routeStatus == RouteStatus.detail) {
       page = pageWrap(VideoDetailPage(videoModel: this.videoModel!));
     } else if (routeStatus == RouteStatus.registration) {
-      page = pageWrap(RegistrationPage(onJumpToLogin: () {
-        _routeStatus = RouteStatus.login;
-        notifyListeners();
-      }));
+      page = pageWrap(RegistrationPage());
     } else if (routeStatus == RouteStatus.login) {
-      page = pageWrap(LoginPage(onJumpToRegistrationPage: () {
-        _routeStatus = RouteStatus.registration;
-        notifyListeners();
-      }));
+      page = pageWrap(LoginPage());
     }
     //
     tempPages = [...tempPages, page];
@@ -128,6 +134,13 @@ class BiliRouteDelegate extends RouterDelegate
         pages: pages,
         // 当路由被pop时, onPopPage会被调用
         onPopPage: (Route<dynamic> route, dynamic result) {
+          myLog("fanhui", StackTrace.current);
+          if ((route.settings as MaterialPage).child is LoginPage) {
+            if (!hasLogin) {
+              showWarnToast("请先登录");
+              return false;
+            }
+          }
           //在这里控制是否可以返回
           if (!route.didPop(result)) {
             return false;
