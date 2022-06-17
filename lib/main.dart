@@ -120,17 +120,23 @@ class BiliRouteDelegate extends RouterDelegate
     pages = tempPages;
     //
     // 创建Navigator 作为路由的管理者
-    return Navigator(
-      key: navigatorKey,
-      pages: pages,
-      // 当路由被pop时, onPopPage会被调用
-      onPopPage: (Route<dynamic> route, dynamic result) {
-        //在这里控制是否可以返回
-        if (!route.didPop(result)) {
-          return false;
-        }
-        return true;
-      },
+    return WillPopScope(
+      //fix Android物理返回键，无法返回上一页问题@https://github.com/flutter/flutter/issues/66349
+      onWillPop: () async => !await navigatorKey.currentState!.maybePop(),
+      child: Navigator(
+        key: navigatorKey,
+        pages: pages,
+        // 当路由被pop时, onPopPage会被调用
+        onPopPage: (Route<dynamic> route, dynamic result) {
+          //在这里控制是否可以返回
+          if (!route.didPop(result)) {
+            return false;
+          }
+          myLog("pages.removeLast()", StackTrace.current);
+          pages.removeLast();
+          return true;
+        },
+      ),
     );
   }
 
