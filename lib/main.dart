@@ -61,6 +61,8 @@ class _BiliAppState extends State<BiliApp> {
 class BiliRouteDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  //
+  late Map pageMapArgs;
   // 初始化方法
   BiliRouteDelegate() {
 // 实现路由跳转逻辑
@@ -68,10 +70,13 @@ class BiliRouteDelegate extends RouterDelegate
       RouteJumpListener(
         onJumpTo: (RouteStatus routeStatus, {Map? args}) {
           _routeStatus = routeStatus;
-
-          if (routeStatus == RouteStatus.detail) {
-            this.videoModel = args?['videlmo'];
+          if (args != null) {
+            this.pageMapArgs = args;
           }
+
+          // if (routeStatus == RouteStatus.detail) {
+          //   this.videoModel = args?['videlmo'];
+          // }
           notifyListeners();
         },
       ),
@@ -115,7 +120,7 @@ class BiliRouteDelegate extends RouterDelegate
       tempPages.clear(); //清理干净
       page = pageWrap(HomePage());
     } else if (routeStatus == RouteStatus.detail) {
-      page = pageWrap(VideoDetailPage(videoModel: this.videoModel!));
+      page = pageWrap(VideoDetailPage(argumentsMap: this.pageMapArgs));
     } else if (routeStatus == RouteStatus.registration) {
       page = pageWrap(RegistrationPage());
     } else if (routeStatus == RouteStatus.login) {
@@ -134,7 +139,7 @@ class BiliRouteDelegate extends RouterDelegate
         pages: pages,
         // 当路由被pop时, onPopPage会被调用
         onPopPage: (Route<dynamic> route, dynamic result) {
-          myLog("fanhui", StackTrace.current);
+          myLog("Navigator 的 onPopPage", StackTrace.current);
           if ((route.settings as MaterialPage).child is LoginPage) {
             if (!hasLogin) {
               showWarnToast("请先登录");

@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
             MaterialButton(
               onPressed: () => HiNavigator.getInstance().onJumpTo(
                 RouteStatus.detail,
-                args: {"videlmo": VideoModel(111)},
+                args: {"videoModel": VideoModel(111)},
               ),
               // widget.onJumpToDetail(VideoModel(111)),
               child: Text("详情"),
