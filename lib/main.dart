@@ -66,6 +66,7 @@ class BiliRouteDelegate extends RouterDelegate
   // 初始化方法
   BiliRouteDelegate() {
 // 实现路由跳转逻辑
+//  注册路由跳转监听
     HiNavigator.getInstance().registerRouteJump(
       RouteJumpListener(
         onJumpTo: (RouteStatus routeStatus, {Map? args}) {
@@ -77,6 +78,7 @@ class BiliRouteDelegate extends RouterDelegate
           // if (routeStatus == RouteStatus.detail) {
           //   this.videoModel = args?['videlmo'];
           // }
+          myLog("马上要执行notifyListeners", StackTrace.current);
           notifyListeners();
         },
       ),
@@ -104,7 +106,7 @@ class BiliRouteDelegate extends RouterDelegate
   //*   方法
   @override
   Widget build(BuildContext context) {
-    myLog("build 方法", StackTrace.current);
+    myLog("RouterDelegate -- build 方法", StackTrace.current);
     // 构建路由栈 : page中装的是一个完整的页面
     var index = getPageIndex(pages, routeStatus);
     // 临时的pages
@@ -128,6 +130,8 @@ class BiliRouteDelegate extends RouterDelegate
     }
     //
     tempPages = [...tempPages, page];
+    // 通知路由发生变化
+    HiNavigator.getInstance().notify(tempPages, pages);
     pages = tempPages;
     //
     // 创建Navigator 作为路由的管理者
@@ -151,7 +155,9 @@ class BiliRouteDelegate extends RouterDelegate
             return false;
           }
           myLog("pages.removeLast()", StackTrace.current);
+          var tempPages = [...pages];
           pages.removeLast();
+          HiNavigator.getInstance().notify(pages, tempPages);
           return true;
         },
       ),
