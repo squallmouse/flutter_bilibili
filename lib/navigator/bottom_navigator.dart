@@ -1,8 +1,10 @@
+import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/favorite_page.dart';
 import 'package:bili/page/home_page.dart';
 import 'package:bili/page/profile_page.dart';
 import 'package:bili/page/ranking_page.dart';
 import 'package:bili/util/color.dart';
+import 'package:bili/util/my_log.dart';
 import 'package:flutter/material.dart';
 
 ///底部导航栏
@@ -18,23 +20,23 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   final _activeColor = primary;
   int _currentIndex = 0;
   final PageController _pageviewController = PageController(initialPage: 0);
+  late List<Widget> _pages;
 
   //*  ------------------------------ */
   //*  method
   @override
   Widget build(BuildContext context) {
+    _pages = [HomePage(), RankingPage(), FavoritePage(), ProfilePage()];
     return Scaffold(
       body: PageView(
         //禁止滚动
         physics: NeverScrollableScrollPhysics(),
         controller: _pageviewController,
-        children: [HomePage(), RankingPage(), FavoritePage(), ProfilePage()],
-        onPageChanged: (index) {
-          _pageviewController.jumpToPage(index);
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        children: _pages,
+        // 不能滑动了..暂时不需要这个方法了
+        // onPageChanged: (index) {
+        //   myLog("onPageChanged", StackTrace.current);
+        // },
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: _activeColor,
@@ -46,14 +48,17 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           _bottomItem('我的', Icons.live_tv, 3),
         ],
         currentIndex: _currentIndex,
-        onTap: (index) {
-          _pageviewController.jumpToPage(index);
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: (index) => _jumpTo(index),
       ),
     );
+  }
+
+  void _jumpTo(index) {
+    HiNavigator.getInstance().onBottomTabChange(index, _pages[index]);
+    _pageviewController.jumpToPage(index);
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   _bottomItem(String title, IconData icon, int index) {
