@@ -142,7 +142,7 @@ class HiNavigator extends _RouteJumpListener {
     myLog("hi_navigator-->pre --> 上一次打开的页面:${_current?.page}",
         StackTrace.current);
     _listeners.forEach((element) {
-      // 通知所有的监听 新老页面
+      // 通知_listener列表中所有的监听方法 新老页面
       element(current, _current);
     });
     _current = current;

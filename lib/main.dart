@@ -5,6 +5,7 @@ import 'package:bili/http/dao/login_dao.dart';
 import 'package:bili/http/dao/notice_dao.dart';
 import 'package:bili/http/request/test_request.dart';
 import 'package:bili/model/video_model.dart';
+import 'package:bili/navigator/bottom_navigator.dart';
 import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/home_page.dart';
 import 'package:bili/page/login_page.dart';
@@ -120,7 +121,8 @@ class BiliRouteDelegate extends RouterDelegate
     var page;
     if (routeStatus == RouteStatus.home) {
       tempPages.clear(); //清理干净
-      page = pageWrap(HomePage());
+      // page = pageWrap(HomePage());
+      page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.detail) {
       page = pageWrap(VideoDetailPage(argumentsMap: this.pageMapArgs));
     } else if (routeStatus == RouteStatus.registration) {
