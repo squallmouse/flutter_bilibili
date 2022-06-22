@@ -1,13 +1,10 @@
 import 'package:bili/db/hi_cache.dart';
-import 'package:bili/http/core/dio_adapter.dart';
-import 'package:bili/http/core/hi_net.dart';
 import 'package:bili/http/dao/login_dao.dart';
-import 'package:bili/http/dao/notice_dao.dart';
-import 'package:bili/http/request/test_request.dart';
-import 'package:bili/model/video_model.dart';
+
+import 'package:bili/model/home_model.dart';
+
 import 'package:bili/navigator/bottom_navigator.dart';
 import 'package:bili/navigator/hi_navigator.dart';
-import 'package:bili/page/home_page.dart';
 import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
 import 'package:bili/page/video_detail_page.dart';

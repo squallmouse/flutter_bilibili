@@ -8,7 +8,7 @@ const MAINURL = "api.devio.org";
 abstract class BaseRequest {
   // curl -X GET "http://api.devio.org/uapi/test/test?requestPrams=11" -H "accept: */*"
 
-  var pathParams; // 路径
+  String? pathParams; // 路径 [get path]后添加的
   var useHttps = true; // 是否使用https
   Map<String, String> params = Map(); //参数
   // Map<String, dynamic> header = Map(); // 请求头参数
@@ -34,7 +34,7 @@ abstract class BaseRequest {
   String url() {
     Uri uri;
     var pathStr = path();
-    //拼接path参数
+    //拼接path参数  path + pathParams
     if (pathParams != null) {
       if (path().endsWith("/")) {
         pathStr = "${path()}${pathParams}";

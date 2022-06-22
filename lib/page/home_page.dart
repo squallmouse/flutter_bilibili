@@ -1,4 +1,5 @@
-import 'package:bili/model/video_model.dart';
+import 'package:bili/http/dao/home_dao.dart';
+import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/home_tab_page.dart';
 import 'package:bili/util/color.dart';
@@ -19,7 +20,9 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   late RouteChangeListener listener;
   late TabController _tabController;
-  var _tabs = ["推荐", "热门", "追播", "影视", "搞笑", "日常", "综合", "手机游戏", "短片·手书·配音"];
+  // var _tabs = ["推荐", "热门", "追播", "影视", "搞笑", "日常", "综合", "手机游戏", "短片·手书·配音"];
+  List<CategoryModel> _categoryList = [];
+  late HomeModel? _homeModel;
   //*  ------------------------------ */
   //*  method
   @override
@@ -33,7 +36,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController = TabController(length: _categoryList.length, vsync: this);
     HiNavigator.getInstance().addListener(this.listener = (current, pre) {
       myLog("homePage-->current:${current.page}", StackTrace.current);
       myLog("homePage-->pre:${pre?.page}", StackTrace.current);
@@ -43,6 +46,24 @@ class _HomePageState extends State<HomePage>
         myLog("首页:onPause", StackTrace.current);
       }
     });
+    _loadData();
+  }
+
+  void _loadData() {
+    myLog("?????????????---> 请求前", StackTrace.current);
+    HomeDao.get(categoryName: "推荐").then((homeMo) {
+      myLog("?????????????---> finish : ${homeMo}", StackTrace.current);
+      if (homeMo.categoryList != null) {
+        setState(() {
+          _homeModel = homeMo;
+          _categoryList = homeMo.categoryList!;
+        });
+
+        _tabController =
+            TabController(length: _categoryList.length, vsync: this);
+      }
+    });
+    myLog("?????????????---> 请求后", StackTrace.current);
   }
 
   @override
@@ -59,8 +80,12 @@ class _HomePageState extends State<HomePage>
           Flexible(
               child: TabBarView(
             controller: _tabController,
-            children: _tabs.map((tab) {
-              return HomeTabPage(name: tab);
+            children: _categoryList.map((tab) {
+              // 首页的页面
+              return HomeTabPage(
+                name: tab.name ?? "xyz???",
+                bannerList: (tab.name == "推荐") ? _homeModel?.bannerList : null,
+              );
             }).toList(),
           ))
         ],
@@ -76,7 +101,8 @@ class _HomePageState extends State<HomePage>
     return TabBar(
       tabs: tabList(),
       isScrollable: true,
-      labelColor: Colors.black,
+      unselectedLabelColor: Colors.black,
+      labelColor: primary,
       controller: _tabController,
       // indicator: BoxDecoration(),
       indicator: UnderlineIndicator(
@@ -85,18 +111,18 @@ class _HomePageState extends State<HomePage>
           color: primary,
           width: 3,
         ),
-        insets: EdgeInsets.fromLTRB(15, 0, 15, 5),
+        insets: EdgeInsets.fromLTRB(15, 0, 15, 0),
       ),
     );
   }
 
   List<Widget> tabList() {
-    return _tabs.map((tab) {
+    return _categoryList.map((tab) {
       return Tab(
         child: Padding(
           padding: EdgeInsets.only(left: 5, right: 5),
           child: Text(
-            tab,
+            tab.name ?? "xyz???",
             style: TextStyle(fontSize: 16),
           ),
         ),

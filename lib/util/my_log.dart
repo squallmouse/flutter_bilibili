@@ -1,7 +1,7 @@
 void myLog(Object message, StackTrace current) {
   CustomTrace programInfo = CustomTrace(current);
   print(
-      "所在文件: ${programInfo.fileName}, 所在行: ${programInfo.lineNumber}, 打印信息:\n-->   $message  \n<- ");
+      "所在文件: ${programInfo.fileName}, 所在行: ${programInfo.lineNumber}, 打印信息:\n-->\n   $message  \n<- ");
 }
 
 class CustomTrace {

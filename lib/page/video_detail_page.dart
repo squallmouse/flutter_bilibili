@@ -1,4 +1,5 @@
-import 'package:bili/model/video_model.dart';
+import 'package:bili/model/home_model.dart';
+
 import 'package:flutter/material.dart';
 
 class VideoDetailPage extends StatefulWidget {
