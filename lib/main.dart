@@ -86,16 +86,18 @@ class BiliRouteDelegate extends RouterDelegate
   // 存放所有页面
   List<MaterialPage> pages = [];
   RouteStatus _routeStatus = RouteStatus.home; //默认为首页
-  VideoModel? videoModel;
+  // VideoModel? videoModel;
 
   bool get hasLogin => LoginDao.getBoardingPass() != null;
 
   RouteStatus get routeStatus {
     if (_routeStatus != RouteStatus.registration && !hasLogin) {
       return _routeStatus = RouteStatus.login;
-    } else if (videoModel != null) {
-      return _routeStatus = RouteStatus.detail;
-    } else {
+    }
+    // else if (videoModel != null) {
+    //   return _routeStatus = RouteStatus.detail;
+    // }
+    else {
       return _routeStatus;
     }
   }

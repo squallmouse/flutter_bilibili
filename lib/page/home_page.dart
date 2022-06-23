@@ -39,19 +39,19 @@ class _HomePageState extends HiState<HomePage>
     super.initState();
     _tabController = TabController(length: _categoryList.length, vsync: this);
     HiNavigator.getInstance().addListener(this.listener = (current, pre) {
-      myLog("homePage-->current:${current.page}", StackTrace.current);
-      myLog("homePage-->pre:${pre?.page}", StackTrace.current);
+      // myLog("homePage-->current:${current.page}", StackTrace.current);
+      // myLog("homePage-->pre:${pre?.page}", StackTrace.current);
       if (widget == current.page || current.page is HomePage) {
-        myLog("打开了首页:onResume", StackTrace.current);
+        // myLog("打开了首页:onResume", StackTrace.current);
       } else if (widget == pre?.page || pre?.page is HomePage) {
-        myLog("首页:onPause", StackTrace.current);
+        // myLog("首页:onPause", StackTrace.current);
       }
     });
     _loadData();
   }
 
   void _loadData() {
-    myLog("?????????????---> 请求前", StackTrace.current);
+    // myLog("?????????????---> 请求前", StackTrace.current);
     HomeDao.get(categoryName: "推荐").then((homeMo) {
       myLog("?????????????---> finish : ${homeMo}", StackTrace.current);
       if (homeMo.categoryList != null) {
@@ -64,7 +64,7 @@ class _HomePageState extends HiState<HomePage>
             TabController(length: _categoryList.length, vsync: this);
       }
     });
-    myLog("?????????????---> 请求后", StackTrace.current);
+    // myLog("?????????????---> 请求后", StackTrace.current);
   }
 
   @override
