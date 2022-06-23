@@ -1,3 +1,4 @@
+import 'package:bili/core/hi_state.dart';
 import 'package:bili/http/dao/home_dao.dart';
 import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/hi_navigator.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomePageState extends HiState<HomePage>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   late RouteChangeListener listener;
   late TabController _tabController;
@@ -96,8 +97,8 @@ class _HomePageState extends State<HomePage>
   @override
   bool get wantKeepAlive => true;
 
-  /// 自定义的tab
-  _tabBar() {
+  /// 自定义的tabBar
+  TabBar _tabBar() {
     return TabBar(
       tabs: tabList(),
       isScrollable: true,
@@ -116,6 +117,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  /// 一个个具体的tab
   List<Widget> tabList() {
     return _categoryList.map((tab) {
       return Tab(
