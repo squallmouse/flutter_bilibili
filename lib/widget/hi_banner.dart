@@ -7,20 +7,24 @@ import 'package:card_swiper/card_swiper.dart';
 
 class HiBanner extends StatelessWidget {
   final List<BannerModel> bannerList;
-  final double bannerHeight;
+  // final double bannerHeight;
   final EdgeInsets padding;
 
   /// 构造方法..
   const HiBanner(
       {super.key,
       required this.bannerList,
-      this.bannerHeight = 160.0,
+      // this.bannerHeight = 160.0,
       required this.padding});
   @override
   Widget build(BuildContext context) {
+    final containrHeight =
+        (MediaQuery.of(context).size.width - this.padding.horizontal) *
+            (9 / 16);
     return Container(
       padding: this.padding,
-      height: this.bannerHeight,
+      // height: this.bannerHeight,
+      height: containrHeight,
       child: _bannerCreate(),
     );
   }
@@ -30,7 +34,7 @@ class HiBanner extends StatelessWidget {
     return Swiper(
       itemCount: this.bannerList.length,
       autoplay: true,
-      containerHeight: this.bannerHeight,
+      // containerHeight: this.bannerHeight,
       // control: SwiperControl(),
       pagination: SwiperPagination(
         alignment: Alignment.bottomRight,
@@ -56,10 +60,13 @@ class HiBanner extends StatelessWidget {
       child: Container(
         child: ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(6.0)),
+          // child: AspectRatio(
+          //   aspectRatio: 16.0 / 9.0,
           child: Image.network(
             mo.cover ?? " ",
             fit: BoxFit.cover,
           ),
+          // ),
         ),
       ),
     );

@@ -46,7 +46,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
     return HiBanner(
       bannerList: widget.bannerList!,
       padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-      bannerHeight: 260,
+      // bannerHeight: 260,
     );
   }
 }

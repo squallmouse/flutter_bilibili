@@ -266,6 +266,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.10.0"
+  status_bar_control:
+    dependency: "direct main"
+    description:
+      name: status_bar_control
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.2.1"
   stream_channel:
     dependency: transitive
     description:

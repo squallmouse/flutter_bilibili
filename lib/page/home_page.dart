@@ -5,13 +5,16 @@ import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/home_tab_page.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/widget/home_navigation.dart';
+import 'package:bili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
 class HomePage extends StatefulWidget {
   // late final ValueChanged<VideoModel> onJumpToDetail;
-  HomePage({Key? key}) : super(key: key);
+  final VoidCallback jumpToMyPage;
+  HomePage({Key? key, required this.jumpToMyPage}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -73,9 +76,14 @@ class _HomePageState extends HiState<HomePage>
     return Scaffold(
       body: Column(
         children: [
+          NavigationBarMy(
+            child: HomeNavigationWidget(
+              jumpToMy: widget.jumpToMyPage,
+            ),
+          ),
           Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(top: 30),
+            color: Colors.green,
+            padding: EdgeInsets.only(top: 0),
             child: _tabBar(),
           ),
           Flexible(
