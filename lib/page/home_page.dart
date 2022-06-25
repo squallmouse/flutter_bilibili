@@ -82,8 +82,8 @@ class _HomePageState extends HiState<HomePage>
             ),
           ),
           Container(
-            color: Colors.green,
-            padding: EdgeInsets.only(top: 0),
+            color: Colors.white,
+            // padding: EdgeInsets.only(top: 0),
             child: _tabBar(),
           ),
           Flexible(
@@ -92,7 +92,7 @@ class _HomePageState extends HiState<HomePage>
             children: _categoryList.map((tab) {
               // 首页的页面
               return HomeTabPage(
-                name: tab.name ?? "xyz???",
+                categoryName: tab.name ?? "xyz???",
                 bannerList: (tab.name == "推荐") ? _homeModel?.bannerList : null,
               );
             }).toList(),

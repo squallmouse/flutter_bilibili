@@ -33,7 +33,8 @@ class NavigationBarMy extends StatelessWidget {
 
   void _statusBarInit() async {
     await StatusBarControl.setColor(statusColor, animated: false);
-    await StatusBarControl.setStyle(statusBarTheme == StatusBarTheme.DARK
+    // await StatusBarControl.setColor(Colors.orange, animated: false);
+    await StatusBarControl.setStyle(statusBarTheme != StatusBarTheme.DARK
         ? StatusBarStyle.DARK_CONTENT
         : StatusBarStyle.LIGHT_CONTENT);
   }
