@@ -123,6 +123,7 @@ class BiliRouteDelegate extends RouterDelegate
       // page = pageWrap(HomePage());
       page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.detail) {
+      myLog("xxx => ${this.pageMapArgs}", StackTrace.current);
       page = pageWrap(VideoDetailPage(argumentsMap: this.pageMapArgs));
     } else if (routeStatus == RouteStatus.registration) {
       page = pageWrap(RegistrationPage());

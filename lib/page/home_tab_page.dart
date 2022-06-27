@@ -4,6 +4,7 @@ import 'package:bili/model/home_model.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/toast.dart';
 import 'package:bili/widget/hi_banner.dart';
+import 'package:bili/widget/video_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nested/flutter_nested.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -40,6 +41,22 @@ class _HomeTabPageState extends State<HomeTabPage>
     _loadData();
   }
 
+  _test(int index) {
+    var temp = index % 3;
+    switch (temp) {
+      case 0:
+        return Colors.green;
+        break;
+      case 1:
+        return Colors.yellow;
+        break;
+      case 2:
+        return Colors.red;
+        break;
+      default:
+    }
+  }
+
   Widget _buildPage() {
     return HiNestedScrollView(
         controller: ScrollController(),
@@ -52,12 +69,14 @@ class _HomeTabPageState extends State<HomeTabPage>
             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: _loadDataVideoList.length,
         itemBuilder: (BuildContext context, int index) {
-          return _GridViewCreate(_loadDataVideoList[index]);
+          return VideoCard(videoMo: _loadDataVideoList[index]);
+          //_GridViewCreate(_loadDataVideoList[index]);
         });
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return MediaQuery.removePadding(
       removeTop: true,
       context: context,
@@ -69,7 +88,7 @@ class _HomeTabPageState extends State<HomeTabPage>
   Widget _banner(List<BannerModel>? bannerList) {
     return HiBanner(
       bannerList: widget.bannerList!,
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       // bannerHeight: 260,
     );
   }
@@ -95,18 +114,6 @@ class _HomeTabPageState extends State<HomeTabPage>
       myLog("HiNetError --> $e", StackTrace.current);
       showWarnToast(e.message);
     }
-  }
-
-  /// 创建GridView
-  Widget _GridViewCreate(VideoModel videoMO) {
-    return Container(
-      // padding: EdgeInsets.only(left: 8, right: 8),
-      height: 160,
-      child: Image.network(
-        videoMO.cover ?? "",
-        fit: BoxFit.cover,
-      ),
-    );
   }
 
   /// 保持生命

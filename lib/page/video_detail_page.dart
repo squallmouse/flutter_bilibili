@@ -1,4 +1,5 @@
 import 'package:bili/model/home_model.dart';
+import 'package:bili/util/my_log.dart';
 
 import 'package:flutter/material.dart';
 
@@ -11,11 +12,11 @@ class VideoDetailPage extends StatefulWidget {
 }
 
 class _VideoDetailPageState extends State<VideoDetailPage> {
-  late final BannerModel videoModel;
+  late final VideoModel videoModel;
   @override
   Widget build(BuildContext context) {
     videoModel = widget.argumentsMap["mode"];
-
+    myLog("message = ${videoModel}", StackTrace.current);
     return Scaffold(
       appBar: AppBar(),
       body: Container(
