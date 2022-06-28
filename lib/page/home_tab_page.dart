@@ -1,6 +1,7 @@
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/home_dao.dart';
 import 'package:bili/model/home_model.dart';
+import 'package:bili/util/color.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/toast.dart';
 import 'package:bili/widget/hi_banner.dart';
@@ -28,38 +29,53 @@ class _HomeTabPageState extends State<HomeTabPage>
   ///  存放获取的数据
   List<VideoModel> _loadDataVideoList = [];
 
-  ///  是否刷新
-  bool _isRefresh = true;
+  ///  是否正在加载数据
+  bool _isLoading = true;
 
   /// 哪一页
   int _pageIndex = 1;
+
+  /// 控制器
+  var _controller = ScrollController();
   //*  ------------------------------ */
   //*  method
   @override
   void initState() {
     super.initState();
+    //控制器添加监听
+    _controller.addListener(() {
+      // 控制器的最大距离 - 滑动的距离
+      var dis =
+          _controller.position.maxScrollExtent - _controller.position.pixels;
+      myLog("dis ==> ${dis} ", StackTrace.current);
+      //当距离底部不足300时加载更多
+      if (dis < 300 && !_isLoading) {
+        print("--------loading----------");
+        _loadData(loadMore: true);
+      }
+    });
     _loadData();
   }
 
-  _test(int index) {
-    var temp = index % 3;
-    switch (temp) {
-      case 0:
-        return Colors.green;
-        break;
-      case 1:
-        return Colors.yellow;
-        break;
-      case 2:
-        return Colors.red;
-        break;
-      default:
-    }
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return RefreshIndicator(
+      color: primary,
+      onRefresh: _loadData,
+      child: MediaQuery.removePadding(
+        removeTop: true,
+        context: context,
+        child: _buildPage(),
+      ),
+    );
   }
 
+  /// 构建页面
   Widget _buildPage() {
     return HiNestedScrollView(
-        controller: ScrollController(),
+        controller: _controller,
         padding: EdgeInsets.only(top: 10, left: 10, right: 10),
         headers: [
           if (widget.bannerList != null) _banner(widget.bannerList),
@@ -74,16 +90,6 @@ class _HomeTabPageState extends State<HomeTabPage>
         });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return MediaQuery.removePadding(
-      removeTop: true,
-      context: context,
-      child: _buildPage(),
-    );
-  }
-
   /// banner 轮播图
   Widget _banner(List<BannerModel>? bannerList) {
     return HiBanner(
@@ -94,24 +100,34 @@ class _HomeTabPageState extends State<HomeTabPage>
   }
 
   /// 获取数据
-  void _loadData() {
-    _pageIndex = _isRefresh == true ? 1 : _pageIndex + 1;
+  Future<void> _loadData({bool loadMore = false}) async {
+    // loadMore = true : 加载更多 ; false: 刷新
+    _pageIndex = (loadMore == false ? 1 : _pageIndex + 1);
+    _isLoading = true;
+
     try {
-      HomeDao.get(categoryName: widget.categoryName, pageIndex: _pageIndex)
+      await HomeDao.get(
+              categoryName: widget.categoryName, pageIndex: _pageIndex)
           .then(
         (homeMo) {
           List<VideoModel> tempList = [...?homeMo.videoList];
+          if (loadMore == false) {
+            _loadDataVideoList = [];
+          }
           setState(() {
             _loadDataVideoList = [..._loadDataVideoList, ...tempList];
+            _isLoading = false;
           });
           myLog("message = ${_loadDataVideoList}", StackTrace.current);
         },
       );
     } on NeedAuth catch (e) {
       myLog("NeedAuth --> $e", StackTrace.current);
+      _isLoading = false;
       showWarnToast(e.message);
     } on HiNetError catch (e) {
       myLog("HiNetError --> $e", StackTrace.current);
+      _isLoading = false;
       showWarnToast(e.message);
     }
   }
