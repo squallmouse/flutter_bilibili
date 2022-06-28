@@ -47,10 +47,11 @@ class _HomeTabPageState extends State<HomeTabPage>
       // 控制器的最大距离 - 滑动的距离
       var dis =
           _controller.position.maxScrollExtent - _controller.position.pixels;
-      myLog("dis ==> ${dis} ", StackTrace.current);
+
       //当距离底部不足300时加载更多
       if (dis < 300 && !_isLoading) {
         print("--------loading----------");
+        myLog("dis ==> ${dis} ", StackTrace.current);
         _loadData(loadMore: true);
       }
     });
@@ -118,7 +119,6 @@ class _HomeTabPageState extends State<HomeTabPage>
             _loadDataVideoList = [..._loadDataVideoList, ...tempList];
             _isLoading = false;
           });
-          myLog("message = ${_loadDataVideoList}", StackTrace.current);
         },
       );
     } on NeedAuth catch (e) {

@@ -6,6 +6,7 @@ import 'package:bili/page/home_tab_page.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/widget/home_navigation.dart';
+import 'package:bili/widget/loading_container.dart';
 import 'package:bili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -27,6 +28,9 @@ class _HomePageState extends HiState<HomePage>
   // var _tabs = ["推荐", "热门", "追播", "影视", "搞笑", "日常", "综合", "手机游戏", "短片·手书·配音"];
   List<CategoryModel> _categoryList = [];
   late HomeModel? _homeModel;
+
+  /// 首页没有数据加载出来前,加载动画
+  bool _isLoading = true;
   //*  ------------------------------ */
   //*  method
   @override
@@ -61,10 +65,12 @@ class _HomePageState extends HiState<HomePage>
         setState(() {
           _homeModel = homeMo;
           _categoryList = homeMo.categoryList!;
+          _isLoading = false;
         });
 
         _tabController =
             TabController(length: _categoryList.length, vsync: this);
+        _isLoading = false;
       }
     });
     // myLog("?????????????---> 请求后", StackTrace.current);
@@ -74,30 +80,34 @@ class _HomePageState extends HiState<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Column(
-        children: [
-          NavigationBarMy(
-            child: HomeNavigationWidget(
-              jumpToMy: widget.jumpToMyPage,
+      body: LoadingContainer(
+        isLoading: _isLoading,
+        child: Column(
+          children: [
+            NavigationBarMy(
+              child: HomeNavigationWidget(
+                jumpToMy: widget.jumpToMyPage,
+              ),
             ),
-          ),
-          Container(
-            color: Colors.white,
-            // padding: EdgeInsets.only(top: 0),
-            child: _tabBar(),
-          ),
-          Flexible(
-              child: TabBarView(
-            controller: _tabController,
-            children: _categoryList.map((tab) {
-              // 首页的页面
-              return HomeTabPage(
-                categoryName: tab.name ?? "xyz???",
-                bannerList: (tab.name == "推荐") ? _homeModel?.bannerList : null,
-              );
-            }).toList(),
-          ))
-        ],
+            Container(
+              color: Colors.white,
+              // padding: EdgeInsets.only(top: 0),
+              child: _tabBar(),
+            ),
+            Flexible(
+                child: TabBarView(
+              controller: _tabController,
+              children: _categoryList.map((tab) {
+                // 首页的页面
+                return HomeTabPage(
+                  categoryName: tab.name ?? "xyz???",
+                  bannerList:
+                      (tab.name == "推荐") ? _homeModel?.bannerList : null,
+                );
+              }).toList(),
+            ))
+          ],
+        ),
       ),
     );
   }
@@ -109,6 +119,7 @@ class _HomePageState extends HiState<HomePage>
   TabBar _tabBar() {
     return TabBar(
       tabs: tabList(),
+      onTap: (page) => print("page ==> ${page}"),
       isScrollable: true,
       unselectedLabelColor: Colors.black,
       labelColor: primary,
