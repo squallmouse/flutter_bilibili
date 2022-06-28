@@ -46,7 +46,7 @@ class _BiliAppState extends State<BiliApp> {
           title: "flutter demo",
           theme: ThemeData(primarySwatch: themeColorWhite),
           // primaryColor的值是一个Color类型的，为所有的Widget 提供基础颜色；
-// primarySwatch的值是一个MaterialColor类型，而不是Color类型的，主要为Material 系列组件提供基础色
+          // primarySwatch的值是一个MaterialColor类型，而不是Color类型的，主要为Material 系列组件提供基础色
           debugShowCheckedModeBanner: false,
           home: widget2,
         );

@@ -1,6 +1,7 @@
 import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/util/format_util.dart';
+import 'package:bili/util/image_cached.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -41,15 +42,8 @@ class VideoCard extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        ///
-        FadeInImage.memoryNetwork(
-          fit: BoxFit.cover,
-          placeholder: kTransparentImage,
-          image: videoMo.cover ?? "",
-          width: size.width / 2 - 10,
-          height: 110,
-        ),
-
+        ImageCachedUtils(videoMo.cover ?? "",
+            iheight: 110, iwidth: size.width / 2 - 10),
         Positioned(
           left: 0,
           right: 0,
@@ -142,11 +136,8 @@ class VideoCard extends StatelessWidget {
             //头像
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                owner?.face ?? " ",
-                height: 16,
-                width: 16,
-              ),
+              child:
+                  ImageCachedUtils(owner?.face ?? " ", iheight: 16, iwidth: 16),
             ),
             // 作者
             Padding(

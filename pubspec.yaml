@@ -38,6 +38,7 @@ dependencies:
   flutter_staggered_grid_view: ^0.6.1 # feed
   flutter_nested: ^1.0.0 #
   transparent_image: ^2.0.0 # 淡入淡出效果
+  cached_network_image: ^3.2.1 # 图片缓存
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
