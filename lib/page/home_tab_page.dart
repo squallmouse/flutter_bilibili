@@ -82,8 +82,8 @@ class _HomeTabPageState extends State<HomeTabPage>
           if (widget.bannerList != null) _banner(widget.bannerList),
           SizedBox(height: 10),
         ],
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, childAspectRatio: 0.9),
         itemCount: _loadDataVideoList.length,
         itemBuilder: (BuildContext context, int index) {
           return VideoCard(videoMo: _loadDataVideoList[index]);
