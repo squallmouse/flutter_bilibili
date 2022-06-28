@@ -26,7 +26,14 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   //*  method
   @override
   Widget build(BuildContext context) {
-    _pages = [HomePage(), RankingPage(), FavoritePage(), ProfilePage()];
+    _pages = [
+      HomePage(jumpToMyPage: () {
+        _jumpTo(3);
+      }),
+      RankingPage(),
+      FavoritePage(),
+      ProfilePage()
+    ];
     return Scaffold(
       body: PageView(
         //禁止滚动

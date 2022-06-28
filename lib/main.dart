@@ -1,13 +1,10 @@
 import 'package:bili/db/hi_cache.dart';
-import 'package:bili/http/core/dio_adapter.dart';
-import 'package:bili/http/core/hi_net.dart';
 import 'package:bili/http/dao/login_dao.dart';
-import 'package:bili/http/dao/notice_dao.dart';
-import 'package:bili/http/request/test_request.dart';
-import 'package:bili/model/video_model.dart';
+
+import 'package:bili/model/home_model.dart';
+
 import 'package:bili/navigator/bottom_navigator.dart';
 import 'package:bili/navigator/hi_navigator.dart';
-import 'package:bili/page/home_page.dart';
 import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
 import 'package:bili/page/video_detail_page.dart';
@@ -49,7 +46,7 @@ class _BiliAppState extends State<BiliApp> {
           title: "flutter demo",
           theme: ThemeData(primarySwatch: themeColorWhite),
           // primaryColor的值是一个Color类型的，为所有的Widget 提供基础颜色；
-// primarySwatch的值是一个MaterialColor类型，而不是Color类型的，主要为Material 系列组件提供基础色
+          // primarySwatch的值是一个MaterialColor类型，而不是Color类型的，主要为Material 系列组件提供基础色
           debugShowCheckedModeBanner: false,
           home: widget2,
         );
@@ -89,16 +86,18 @@ class BiliRouteDelegate extends RouterDelegate
   // 存放所有页面
   List<MaterialPage> pages = [];
   RouteStatus _routeStatus = RouteStatus.home; //默认为首页
-  VideoModel? videoModel;
+  // VideoModel? videoModel;
 
   bool get hasLogin => LoginDao.getBoardingPass() != null;
 
   RouteStatus get routeStatus {
     if (_routeStatus != RouteStatus.registration && !hasLogin) {
       return _routeStatus = RouteStatus.login;
-    } else if (videoModel != null) {
-      return _routeStatus = RouteStatus.detail;
-    } else {
+    }
+    // else if (videoModel != null) {
+    //   return _routeStatus = RouteStatus.detail;
+    // }
+    else {
       return _routeStatus;
     }
   }
@@ -124,6 +123,7 @@ class BiliRouteDelegate extends RouterDelegate
       // page = pageWrap(HomePage());
       page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.detail) {
+      myLog("xxx => ${this.pageMapArgs}", StackTrace.current);
       page = pageWrap(VideoDetailPage(argumentsMap: this.pageMapArgs));
     } else if (routeStatus == RouteStatus.registration) {
       page = pageWrap(RegistrationPage());

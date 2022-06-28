@@ -16,6 +16,7 @@ class HiNet {
   }
 
   //  发送请求
+  /// 返回的就是 data中的数据
   Future fire(BaseRequest request) async {
     HiNetResponse? response;
     var error;

@@ -1,3 +1,4 @@
+import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/bottom_navigator.dart';
 import 'package:bili/page/home_page.dart';
 import 'package:bili/page/login_page.dart';
