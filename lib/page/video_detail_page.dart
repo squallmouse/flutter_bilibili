@@ -1,5 +1,6 @@
 import 'package:bili/model/home_model.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/widget/video_view.dart';
 
 import 'package:flutter/material.dart';
 
@@ -19,9 +20,21 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
     myLog("message = ${videoModel}", StackTrace.current);
     return Scaffold(
       appBar: AppBar(),
-      body: Container(
-        child: Text("视频详情页, vid:${videoModel.id}"),
+      body: Column(
+        children: [
+          Text("视频详情页, vid:${videoModel.id}"),
+          Text("视频标题 : ${videoModel.title}"),
+          _videoPlayer(),
+        ],
       ),
+    );
+  }
+
+  /// 视频播放器
+  _videoPlayer() {
+    return VideoView(
+      url: videoModel.url ?? "",
+      cover: videoModel.cover ?? "",
     );
   }
 }
