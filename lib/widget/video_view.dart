@@ -1,3 +1,6 @@
+import 'package:bili/util/color.dart';
+import 'package:bili/util/hi_video_controller.dart';
+import 'package:bili/util/image_cached.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -9,6 +12,7 @@ class VideoView extends StatefulWidget {
   final bool autoPlay; //自动播放
   final bool looping; // 循环播放
   final double aspectRatio; // 缩放比例
+  late final MYMaterialControls;
   VideoView(
       {Key? key,
       required this.url,
@@ -25,8 +29,24 @@ class VideoView extends StatefulWidget {
 class _VideoViewState extends State<VideoView> {
   late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
+
 //*  ------------------------------ */
 //*  method
+  Widget _placeHolder() {
+    return FractionallySizedBox(
+      widthFactor: 1,
+      child: ImageCachedUtils(widget.cover),
+    );
+  }
+
+  /// 进度条颜色
+  get _progressColors => ChewieProgressColors(
+      playedColor: primary,
+      handleColor: Colors.white,
+      backgroundColor: Colors.grey,
+      bufferedColor: primary[50]!);
+
+  /// 初始化init
   @override
   void initState() {
     super.initState();
@@ -35,7 +55,10 @@ class _VideoViewState extends State<VideoView> {
         videoPlayerController: _videoPlayerController,
         autoPlay: widget.autoPlay,
         looping: widget.looping,
-        aspectRatio: widget.aspectRatio);
+        aspectRatio: widget.aspectRatio,
+        placeholder: _placeHolder(),
+        materialProgressColors: _progressColors,
+        customControls: MyMaterialControls());
   }
 
   @override
