@@ -1,6 +1,7 @@
 import 'package:bili/util/color.dart';
 import 'package:bili/util/hi_video_controller.dart';
 import 'package:bili/util/image_cached.dart';
+import 'package:bili/util/view_utils.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,7 @@ class VideoView extends StatefulWidget {
   final bool autoPlay; //自动播放
   final bool looping; // 循环播放
   final double aspectRatio; // 缩放比例
+  final Widget overlayUI;
   // late final MYMaterialControls;
   VideoView(
       {Key? key,
@@ -21,7 +23,8 @@ class VideoView extends StatefulWidget {
       required this.cover,
       this.autoPlay = false,
       this.looping = false,
-      this.aspectRatio = 16 / 9})
+      this.aspectRatio = 16 / 9,
+      required this.overlayUI})
       : super(key: key);
 
   @override
@@ -60,7 +63,10 @@ class _VideoViewState extends State<VideoView> {
       aspectRatio: widget.aspectRatio,
       placeholder: _placeHolder(),
       materialProgressColors: _progressColors,
-      customControls: MyMaterialControls(),
+      customControls: MyMaterialControls(
+        overlayUI: widget.overlayUI, // 顶部渐变
+        bottomGradient: blackLinearGradient(), //底部渐变
+      ),
     );
     _chewieController.addListener(_fullScreenListen);
   }

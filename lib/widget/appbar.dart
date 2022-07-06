@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:bili/util/view_utils.dart';
 import 'package:flutter/material.dart';
 
 appbar(String leftTitle, String rightTitle,
@@ -29,5 +30,31 @@ appbar(String leftTitle, String rightTitle,
         ),
       ),
     ],
+  );
+}
+
+/// 视频详情页appBar
+videoAppBar() {
+  return Container(
+    padding: EdgeInsets.only(right: 8),
+    decoration: BoxDecoration(
+      gradient: blackLinearGradient(fromTop: true),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        BackButton(
+          color: Colors.white,
+        ),
+        Row(
+          children: [
+            Icon(Icons.live_tv_rounded, color: Colors.white),
+            Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Icon(Icons.more_vert_rounded, color: Colors.white)),
+          ],
+        )
+      ],
+    ),
   );
 }

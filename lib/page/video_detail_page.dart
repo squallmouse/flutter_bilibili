@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:bili/model/home_model.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/widget/appbar.dart';
 import 'package:bili/widget/video_view.dart';
 
 import 'package:flutter/material.dart';
@@ -18,13 +21,18 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   Widget build(BuildContext context) {
     videoModel = widget.argumentsMap["mode"];
     myLog("message = ${videoModel}", StackTrace.current);
+    //状态栏高度
+    double top = MediaQuery.of(context).padding.top;
     return Scaffold(
-      appBar: AppBar(),
       body: Column(
         children: [
+          SizedBox(
+            height: top,
+            // child: Container(color: Colors.black87),
+          ),
+          _videoPlayer(),
           Text("视频详情页, vid:${videoModel.id}"),
           Text("视频标题 : ${videoModel.title}"),
-          _videoPlayer(),
         ],
       ),
     );
@@ -35,6 +43,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
     return VideoView(
       url: videoModel.url ?? "",
       cover: videoModel.cover ?? "",
+      overlayUI: videoAppBar(),
     );
   }
 }

@@ -22,7 +22,7 @@ class MyMaterialControls extends StatefulWidget {
   /// 是否展示大播放按钮
   final bool showBigPlayIcon;
 
-  /// 视频浮层
+  /// 视频浮层 视频最上面的一层
   final Widget? overlayUI;
 
   /// 底部渐变
