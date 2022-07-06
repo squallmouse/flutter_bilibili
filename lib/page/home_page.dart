@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bili/core/hi_state.dart';
 import 'package:bili/http/dao/home_dao.dart';
 import 'package:bili/model/home_model.dart';
@@ -5,6 +7,7 @@ import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/home_tab_page.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/util/view_utils.dart';
 import 'package:bili/widget/home_navigation.dart';
 import 'package:bili/widget/loading_container.dart';
 import 'package:bili/widget/navigation_bar.dart';
@@ -22,7 +25,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends HiState<HomePage>
-    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+    with
+        AutomaticKeepAliveClientMixin,
+        TickerProviderStateMixin,
+        WidgetsBindingObserver {
   late RouteChangeListener listener;
   late TabController _tabController;
   // var _tabs = ["推荐", "热门", "追播", "影视", "搞笑", "日常", "综合", "手机游戏", "短片·手书·配音"];
@@ -38,12 +44,38 @@ class _HomePageState extends HiState<HomePage>
     myLog("homePage-->dispose", StackTrace.current);
     HiNavigator.getInstance().removeListener(this.listener);
     _tabController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  /// 监听声明周期变化
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    myLog("监听生命周期 : ${state} ", StackTrace.current);
+    switch (state) {
+      case AppLifecycleState.inactive: //不活跃的,即将进入后台
+        myLog("不活跃的,即将进入后台", StackTrace.current);
+        break;
+      case AppLifecycleState.resumed: //从后台切换到了前台
+        myLog("从后台切换到了前台", StackTrace.current);
+        if (Platform.isAndroid) {
+          changeStatusBarColor();
+        }
+        break;
+      case AppLifecycleState.paused: // 界面不可见,在后台
+        myLog("界面不可见,在后台", StackTrace.current);
+        break;
+      case AppLifecycleState.detached: // app结束调用
+        myLog("app结束调用", StackTrace.current);
+        break;
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _tabController = TabController(length: _categoryList.length, vsync: this);
     HiNavigator.getInstance().addListener(this.listener = (current, pre) {
       // myLog("homePage-->current:${current.page}", StackTrace.current);

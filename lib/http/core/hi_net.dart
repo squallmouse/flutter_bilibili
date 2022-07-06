@@ -38,20 +38,20 @@ class HiNet {
     }
     // 只返回有用的数据
     var result = response?.data;
-    printLog("result --> $result");
+    // printLog("result --> $result");
     var status = response?.statusCode;
     switch (status) {
       case 200:
         return result;
-        break;
+      // break;
       case 401:
         throw NeedLogin();
-        break;
+      // break;
       case 403:
         throw NeedAuth(result.toString());
       default:
         throw HiNetError(status ?? -999, result.toString());
-        break;
+      // break;
     }
   }
 

@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:bili/model/home_model.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/util/view_utils.dart';
 import 'package:bili/widget/appbar.dart';
+import 'package:bili/widget/navigation_bar.dart';
 import 'package:bili/widget/video_view.dart';
 
 import 'package:flutter/material.dart';
@@ -16,11 +18,12 @@ class VideoDetailPage extends StatefulWidget {
 }
 
 class _VideoDetailPageState extends State<VideoDetailPage> {
-  late final VideoModel videoModel;
+  late VideoModel videoModel;
   @override
   Widget build(BuildContext context) {
     videoModel = widget.argumentsMap["mode"];
     myLog("message = ${videoModel}", StackTrace.current);
+    // changeStatusBarColor(statusBarTheme: StatusBarTheme.DARK);
     //状态栏高度
     double top = MediaQuery.of(context).padding.top;
     return Scaffold(
