@@ -3,6 +3,8 @@ import 'package:bili/util/hi_video_controller.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:orientation/orientation.dart';
 import 'package:video_player/video_player.dart';
 
 /// 播放器组件
@@ -12,7 +14,7 @@ class VideoView extends StatefulWidget {
   final bool autoPlay; //自动播放
   final bool looping; // 循环播放
   final double aspectRatio; // 缩放比例
-  late final MYMaterialControls;
+  // late final MYMaterialControls;
   VideoView(
       {Key? key,
       required this.url,
@@ -52,20 +54,23 @@ class _VideoViewState extends State<VideoView> {
     super.initState();
     _videoPlayerController = VideoPlayerController.network(widget.url);
     _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        autoPlay: widget.autoPlay,
-        looping: widget.looping,
-        aspectRatio: widget.aspectRatio,
-        placeholder: _placeHolder(),
-        materialProgressColors: _progressColors,
-        customControls: MyMaterialControls());
+      videoPlayerController: _videoPlayerController,
+      autoPlay: widget.autoPlay,
+      looping: widget.looping,
+      aspectRatio: widget.aspectRatio,
+      placeholder: _placeHolder(),
+      materialProgressColors: _progressColors,
+      customControls: MyMaterialControls(),
+    );
+    _chewieController.addListener(_fullScreenListen);
   }
 
   @override
   void dispose() {
-    super.dispose();
+    _chewieController.removeListener(_fullScreenListen);
     _videoPlayerController.dispose();
     _chewieController.dispose();
+    super.dispose();
   }
 
   @override
@@ -80,5 +85,13 @@ class _VideoViewState extends State<VideoView> {
         controller: _chewieController,
       ),
     );
+  }
+
+  ///  添加是否全屏的监听
+  void _fullScreenListen() {
+    Size screenSize = MediaQuery.of(context).size;
+    if (screenSize.width > screenSize.height) {
+      OrientationPlugin.forceOrientation(DeviceOrientation.portraitUp);
+    }
   }
 }

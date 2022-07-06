@@ -42,6 +42,8 @@ dependencies:
   lottie: ^1.3.0 # 动画   lottiefiles.com
   chewie: ^1.3.4 # 视频播放器  要依赖video_player
   video_player: ^2.4.5 # (video_player 官方维护的视频播放器)
+  orientation: ^1.3.0 # 全屏和非全屏 互相转换
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2 

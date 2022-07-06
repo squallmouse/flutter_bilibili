@@ -364,7 +364,7 @@ class _MyMaterialControlsState extends State<MyMaterialControls>
     }
     setState(() {
       notifier.hideStuff = true;
-
+      // 调用这个方法进行全屏切换
       chewieController.toggleFullScreen();
       _showAfterExpandCollapseTimer =
           Timer(const Duration(milliseconds: 300), () {
