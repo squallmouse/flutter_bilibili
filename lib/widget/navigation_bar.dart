@@ -1,3 +1,4 @@
+import 'package:bili/util/view_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:status_bar_control/status_bar_control.dart';
 
@@ -13,12 +14,12 @@ class NavigationBarMy extends StatelessWidget {
       this.contentHieght = 46.0,
       required this.child,
       this.statusColor = Colors.white,
-      this.statusBarTheme = StatusBarTheme.DARK})
+      this.statusBarTheme = StatusBarTheme.LIGHT})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    _statusBarInit();
+    changeStatusBarColor();
 
     ///状态栏 的高度
     double top = MediaQuery.of(context).padding.top;
@@ -31,11 +32,11 @@ class NavigationBarMy extends StatelessWidget {
     );
   }
 
-  void _statusBarInit() async {
-    await StatusBarControl.setColor(statusColor, animated: false);
-    // await StatusBarControl.setColor(Colors.orange, animated: false);
-    await StatusBarControl.setStyle(statusBarTheme != StatusBarTheme.DARK
-        ? StatusBarStyle.DARK_CONTENT
-        : StatusBarStyle.LIGHT_CONTENT);
-  }
+  // void _statusBarInit() async {
+  //   await StatusBarControl.setColor(statusColor, animated: false);
+  //   // await StatusBarControl.setColor(Colors.orange, animated: false);
+  //   await StatusBarControl.setStyle(statusBarTheme != StatusBarTheme.DARK
+  //       ? StatusBarStyle.DARK_CONTENT
+  //       : StatusBarStyle.LIGHT_CONTENT);
+  // }
 }
