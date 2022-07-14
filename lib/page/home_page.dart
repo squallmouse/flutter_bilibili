@@ -8,6 +8,7 @@ import 'package:bili/page/home_tab_page.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/view_utils.dart';
+import 'package:bili/widget/hi_tab.dart';
 import 'package:bili/widget/home_navigation.dart';
 import 'package:bili/widget/loading_container.dart';
 import 'package:bili/widget/navigation_bar.dart';
@@ -148,38 +149,49 @@ class _HomePageState extends HiState<HomePage>
   bool get wantKeepAlive => true;
 
   /// 自定义的tabBar
-  TabBar _tabBar() {
-    return TabBar(
-      tabs: tabList(),
-      onTap: (page) => print("page ==> ${page}"),
-      isScrollable: true,
-      unselectedLabelColor: Colors.black,
-      labelColor: primary,
-      controller: _tabController,
-      // indicator: BoxDecoration(),
-      indicator: UnderlineIndicator(
-        strokeCap: StrokeCap.round, // Set your line endings.
-        borderSide: BorderSide(
-          color: primary,
-          width: 3,
-        ),
-        insets: EdgeInsets.fromLTRB(15, 0, 15, 0),
-      ),
+  // TabBar _tabBar() {
+  Widget _tabBar() {
+    /// 标题的数组
+    List<String> titleList = _categoryList.map((tab) {
+      return tab.name ?? "xx-noname";
+    }).toList();
+    return MyTabBarNav(
+      tabbarTitlesList: titleList,
+      onTapFn: (page) => print("page ==> ${page}"),
+      tabController: _tabController,
+      // childs: tabList(),
     );
+    // return TabBar(
+    //   tabs: tabList(),
+    //   onTap: (page) => print("page ==> ${page}"),
+    //   isScrollable: true,
+    //   unselectedLabelColor: Colors.black,
+    //   labelColor: primary,
+    //   controller: _tabController,
+    //   // indicator: BoxDecoration(),
+    //   indicator: UnderlineIndicator(
+    //     strokeCap: StrokeCap.round, // Set your line endings.
+    //     borderSide: BorderSide(
+    //       color: primary,
+    //       width: 3,
+    //     ),
+    //     insets: EdgeInsets.fromLTRB(15, 0, 15, 0),
+    //   ),
+    // );
   }
 
-  /// 一个个具体的tab
-  List<Widget> tabList() {
-    return _categoryList.map((tab) {
-      return Tab(
-        child: Padding(
-          padding: EdgeInsets.only(left: 5, right: 5),
-          child: Text(
-            tab.name ?? "xyz???",
-            style: TextStyle(fontSize: 16),
-          ),
-        ),
-      );
-    }).toList();
-  }
+  // /// 一个个具体的tab
+  // List<Widget> tabList() {
+  //   return _categoryList.map((tab) {
+  //     return Tab(
+  //       child: Padding(
+  //         padding: EdgeInsets.only(left: 5, right: 5),
+  //         child: Text(
+  //           tab.name ?? "xyz???",
+  //           style: TextStyle(fontSize: 16),
+  //         ),
+  //       ),
+  //     );
+  //   }).toList();
+  // }
 }
