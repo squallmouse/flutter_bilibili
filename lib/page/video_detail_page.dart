@@ -1,9 +1,13 @@
 import 'dart:io';
 
 import 'package:bili/model/home_model.dart';
+import 'package:bili/util/color.dart';
+import 'package:bili/util/format_util.dart';
+import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/view_utils.dart';
 import 'package:bili/widget/appbar.dart';
+import 'package:bili/widget/expandable_content.dart';
 import 'package:bili/widget/hi_tab.dart';
 import 'package:bili/widget/navigation_bar.dart';
 import 'package:bili/widget/video_view.dart';
@@ -46,6 +50,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
     return Scaffold(
       body: Column(
         children: [
+          /// 状态栏占位
           SizedBox(
             height: top,
             // child: Container(color: Colors.black87),
@@ -54,10 +59,22 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           /// 视频
           _videoPlayer(),
 
-          ///
+          /// tabbar nav
           _detailTabbarNav(),
 
-          // Flexible(child: child)
+          /// 简介 & 评论 --> 内容区域
+          Flexible(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                /// 简介区域内容
+                _buildIntroduction(),
+
+                /// 评论
+                Text("评论~~~~~")
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -94,6 +111,93 @@ class _VideoDetailPageState extends State<VideoDetailPage>
                 color: Colors.grey,
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 创建简介区的内容
+  Widget _buildIntroduction() {
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: ListView(
+        children: [
+          _videoHeadView(),
+          ExpandableContent(model: videoModel),
+          Container(
+            color: Colors.red,
+            height: 100,
+          )
+        ],
+      ),
+    );
+  }
+
+  /// 作者...关注
+  Widget _videoHeadView() {
+    Owner owner = videoModel.owner!;
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(15, 15, 0, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  child: ImageCachedUtils(owner.face ?? "",
+                      iwidth: 40, iheight: 40),
+                ),
+                Padding(padding: EdgeInsets.only(left: 15)),
+                Column(
+                  children: [
+                    /// 名字
+                    Text(
+                      owner.name ?? "noname",
+                      style: TextStyle(
+                          color: primary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+
+                    /// 粉丝
+                    Text(
+                      "${countFormat(owner.fans ?? 0)}粉丝",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            /// 关注
+            Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Container(
+                height: 30,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: MaterialButton(
+                  onPressed: () {
+                    myLog("关注按钮 -- click", StackTrace.current);
+                  },
+                  color: primary,
+                  child: Text(
+                    "+关注",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

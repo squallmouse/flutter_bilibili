@@ -1,4 +1,5 @@
 /// 一些样式相关的变化
+import 'package:bili/util/format_util.dart';
 import 'package:bili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:status_bar_control/status_bar_control.dart';
@@ -28,4 +29,25 @@ void changeStatusBarColor(
   await StatusBarControl.setStyle(statusBarTheme != StatusBarTheme.DARK
       ? StatusBarStyle.DARK_CONTENT
       : StatusBarStyle.LIGHT_CONTENT);
+}
+
+/// 带文字的小图标
+// List<Widget>
+List<Widget> smallIconAndText(IconData icondata, var text) {
+  var _textStyle = TextStyle(fontSize: 12, color: Colors.grey);
+  if (text is int) {
+    text = countFormat(text);
+  }
+  return [
+    Icon(
+      icondata,
+      color: Colors.grey,
+      size: 12,
+    ),
+    Padding(padding: EdgeInsets.only(left: 5)),
+    Text(
+      "${text}",
+      style: _textStyle,
+    )
+  ];
 }
