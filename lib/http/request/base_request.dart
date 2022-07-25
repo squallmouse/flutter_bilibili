@@ -7,7 +7,7 @@ const MAINURL = "api.devio.org";
 // 请求的基类
 abstract class BaseRequest {
   // curl -X GET "http://api.devio.org/uapi/test/test?requestPrams=11" -H "accept: */*"
-
+  /// 路径拼接
   String? pathParams; // 路径 [get path]后添加的
   var useHttps = true; // 是否使用https
   Map<String, String> params = Map(); //参数

@@ -1,18 +1,19 @@
-import 'dart:io';
-
+import 'package:bili/http/dao/video_detail_dao.dart';
 import 'package:bili/model/home_model.dart';
+import 'package:bili/model/video_detail_model.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/format_util.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
-import 'package:bili/util/view_utils.dart';
 import 'package:bili/widget/appbar.dart';
 import 'package:bili/widget/expandable_content.dart';
 import 'package:bili/widget/hi_tab.dart';
-import 'package:bili/widget/navigation_bar.dart';
+import 'package:bili/widget/video_toolbar.dart';
 import 'package:bili/widget/video_view.dart';
 
 import 'package:flutter/material.dart';
+
+import '../model/owner.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final Map argumentsMap;
@@ -24,13 +25,32 @@ class VideoDetailPage extends StatefulWidget {
 
 class _VideoDetailPageState extends State<VideoDetailPage>
     with TickerProviderStateMixin {
+  /// 从home页面传过来的数据
   late VideoModel videoModel;
+
+  /// video_detail_list
+  late List<VideoModel> videoList;
+
+  /// video_detail 视频 详情页的数据
+  VideoDetailModel? videoDetailModel;
   late TabController _tabController;
   final List<String> tabbarTitles = ["简介", "评论"];
   @override
   void initState() {
     super.initState();
+    videoModel = widget.argumentsMap["mode"];
     _tabController = TabController(length: tabbarTitles.length, vsync: this);
+    _loadData();
+  }
+
+  void _loadData() async {
+    //TODO   获取数据
+    videoDetailModel = await VideoDetailDao.get(vid: videoModel.vid ?? "");
+    myLog("_loaddata ==>>> ${videoDetailModel}", StackTrace.current);
+    setState(() {
+      videoModel = videoDetailModel!.videoInfo!;
+      videoList = videoDetailModel!.videoList!;
+    });
   }
 
   @override
@@ -42,8 +62,8 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   ///build
   @override
   Widget build(BuildContext context) {
-    videoModel = widget.argumentsMap["mode"];
-    myLog("message = ${videoModel}", StackTrace.current);
+    // videoModel = widget.argumentsMap["mode"];
+    // myLog("message = ${videoModel}", StackTrace.current);
     // changeStatusBarColor(statusBarTheme: StatusBarTheme.DARK);
     //状态栏高度
     double top = MediaQuery.of(context).padding.top;
@@ -119,13 +139,24 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   /// 创建简介区的内容
   Widget _buildIntroduction() {
+    myLog("_buildIntroduction ==> videoDetailModel", StackTrace.current);
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,
       child: ListView(
         children: [
           _videoHeadView(),
-          ExpandableContent(model: videoModel),
+          //详情
+          ExpandableContent(
+            model: videoModel,
+          ),
+          //
+          VideoToolbar(
+              videoMo: videoModel,
+              isFavorite: videoDetailModel?.isFavorite ?? false,
+              isLike: videoDetailModel?.isLike ?? false
+              // videoDetailModel != null ? videoDetailModel.isLike : false,
+              ),
           Container(
             color: Colors.red,
             height: 100,

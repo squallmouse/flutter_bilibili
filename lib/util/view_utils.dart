@@ -51,3 +51,29 @@ List<Widget> smallIconAndText(IconData icondata, var text) {
     )
   ];
 }
+
+// 上面icon 下面text
+smallIconButton(IconData icondata, String text, Function()? ontap) {
+  Color _textColor = Colors.grey;
+  Color _iconColor = Colors.grey;
+  return Container(
+      width: 44,
+      height: 44,
+      child: InkWell(
+        onTap: ontap,
+        child: Column(
+          children: [
+            Icon(
+              icondata,
+              size: 20,
+              color: _iconColor,
+            ),
+            Text(text,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: _textColor,
+                ))
+          ],
+        ),
+      ));
+}

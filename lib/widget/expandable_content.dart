@@ -1,10 +1,17 @@
 import 'package:bili/model/home_model.dart';
+import 'package:bili/model/video_detail_model.dart';
 import 'package:bili/util/view_utils.dart';
+import 'package:bili/widget/video_toolbar.dart';
 import 'package:flutter/material.dart';
 
 class ExpandableContent extends StatefulWidget {
   final VideoModel model;
-  ExpandableContent({Key? key, required this.model}) : super(key: key);
+  // final VideoDetailModel? videoDetailModel;
+  ExpandableContent({
+    Key? key,
+    required this.model,
+    // this.videoDetailModel,
+  }) : super(key: key);
 
   @override
   State<ExpandableContent> createState() => _ExpandableContentState();
@@ -24,22 +31,23 @@ class _ExpandableContentState extends State<ExpandableContent>
 
   /// 动画高度
   late Animation _heightFactory;
-  // late Animation _tempLine;
+  late Animation _tempLine;
   //*  ------------------------------ */
   //*  init
   @override
   void initState() {
     super.initState();
     _aniController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 400),
-        reverseDuration: Duration(milliseconds: 400));
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+      reverseDuration: Duration(milliseconds: 300),
+    );
     _curvedAnimation =
-        CurvedAnimation(parent: _aniController, curve: Curves.bounceIn);
+        CurvedAnimation(parent: _aniController, curve: Curves.easeIn);
     _heightFactory = Tween(begin: 0.0, end: 1.0).animate(_curvedAnimation);
-    // _tempLine = Tween(begin: 1, end: 2).animate(_curvedAnimation);
+    _tempLine = Tween(begin: 1, end: 2).animate(_curvedAnimation);
     _aniController.addListener(() {
-      print("_heightFactory --> ${_heightFactory.value}");
+      // print("_heightFactory --> ${_heightFactory.value}");
     });
   }
 
@@ -67,7 +75,10 @@ class _ExpandableContentState extends State<ExpandableContent>
           _buildInfoView(),
 
           /// 视频详情
-          ..._buildDesc()
+          ..._buildDesc(),
+
+          /// 点击+++
+          // ..._buildView()
         ],
       ),
     );
@@ -145,7 +156,8 @@ class _ExpandableContentState extends State<ExpandableContent>
 
   /// 视频详情
   _buildDesc() {
-    var _child = _show ? Text("${widget.model.desc}") : null;
+    var _child =
+        _show ? Text("${widget.model.desc}", textAlign: TextAlign.left) : null;
     return [
       AnimatedBuilder(
         animation: _aniController,
@@ -159,4 +171,11 @@ class _ExpandableContentState extends State<ExpandableContent>
       )
     ];
   }
+
+  // _buildView() {
+  //   return [
+  //     VideoToolbar(
+  //         videoDetailModel: widget.videoDetailModel ?? VideoDetailModel())
+  //   ];
+  // }
 }
