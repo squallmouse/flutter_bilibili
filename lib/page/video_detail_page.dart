@@ -11,6 +11,8 @@ import 'package:bili/util/toast.dart';
 import 'package:bili/widget/appbar.dart';
 import 'package:bili/widget/expandable_content.dart';
 import 'package:bili/widget/hi_tab.dart';
+import 'package:bili/widget/video_card.dart';
+import 'package:bili/widget/video_list_card.dart';
 import 'package:bili/widget/video_toolbar.dart';
 import 'package:bili/widget/video_view.dart';
 
@@ -32,7 +34,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   late VideoModel videoModel;
 
   /// video_detail_list
-  late List<VideoModel> videoList;
+  late List<VideoModel> videoList = [];
 
   /// video_detail 视频 详情页的数据
   VideoDetailModel? videoDetailModel;
@@ -165,10 +167,11 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             onTap: _onTap,
             onFavorite: _onFavorite,
           ),
-          Container(
-            color: Colors.red,
-            height: 100,
-          )
+          // 一条横线
+          Divider(
+            height: 1,
+          ),
+          if (videoList.length > 0) ..._buildVideoList(),
         ],
       ),
     );
@@ -291,5 +294,13 @@ class _VideoDetailPageState extends State<VideoDetailPage>
     } on HiNetError catch (e) {
       myLog(e, StackTrace.current);
     }
+  }
+
+  /// 详情页下面的 videolist
+  _buildVideoList() {
+    //TODO :
+    return videoList.map((VideoModel mo) {
+      return VideoDetailCard(videoModel: mo);
+    }).toList();
   }
 }
