@@ -1,3 +1,5 @@
+import 'package:bili/http/core/hi_error.dart';
+import 'package:bili/http/dao/favorite_dao.dart';
 import 'package:bili/http/dao/video_detail_dao.dart';
 import 'package:bili/model/home_model.dart';
 import 'package:bili/model/video_detail_model.dart';
@@ -5,6 +7,7 @@ import 'package:bili/util/color.dart';
 import 'package:bili/util/format_util.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/util/toast.dart';
 import 'package:bili/widget/appbar.dart';
 import 'package:bili/widget/expandable_content.dart';
 import 'package:bili/widget/hi_tab.dart';
@@ -44,13 +47,17 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   }
 
   void _loadData() async {
-    //TODO   获取数据
-    videoDetailModel = await VideoDetailDao.get(vid: videoModel.vid ?? "");
-    myLog("_loaddata ==>>> ${videoDetailModel}", StackTrace.current);
-    setState(() {
-      videoModel = videoDetailModel!.videoInfo!;
-      videoList = videoDetailModel!.videoList!;
-    });
+    try {
+      videoDetailModel = await VideoDetailDao.get(vid: videoModel.vid ?? "");
+      setState(() {
+        videoModel = videoDetailModel!.videoInfo!;
+        videoList = videoDetailModel!.videoList!;
+      });
+    } on NeedAuth catch (e) {
+      myLog("${e}", StackTrace.current);
+    } on HiNetError catch (e) {
+      myLog(e, StackTrace.current);
+    }
   }
 
   @override
@@ -152,11 +159,12 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           ),
           //
           VideoToolbar(
-              videoMo: videoModel,
-              isFavorite: videoDetailModel?.isFavorite ?? false,
-              isLike: videoDetailModel?.isLike ?? false
-              // videoDetailModel != null ? videoDetailModel.isLike : false,
-              ),
+            videoMo: videoModel,
+            isFavorite: videoDetailModel?.isFavorite ?? false,
+            isLike: videoDetailModel?.isLike ?? false,
+            onTap: _onTap,
+            onFavorite: _onFavorite,
+          ),
           Container(
             color: Colors.red,
             height: 100,
@@ -233,5 +241,55 @@ class _VideoDetailPageState extends State<VideoDetailPage>
         ),
       ),
     );
+  }
+
+  /// 点赞
+  void _onTap() {
+    try {
+      FavoriteDao.favorite(
+              vid: videoModel.vid!,
+              isFavorite: videoDetailModel?.isLike ?? false)
+          .then((response) {
+        videoDetailModel!.isLike = !(videoDetailModel!.isLike!);
+        if (videoDetailModel!.isLike!) {
+          videoModel.like = videoModel.like! + 1;
+        } else {
+          videoModel.like = videoModel.like! - 1;
+        }
+        setState(() {
+          videoModel = videoModel;
+        });
+        showToast(response["msg"]);
+      });
+    } on NeedAuth catch (e) {
+      myLog(e, StackTrace.current);
+    } on HiNetError catch (e) {
+      myLog(e, StackTrace.current);
+    }
+  }
+
+  /// 收藏
+  void _onFavorite() {
+    try {
+      FavoriteDao.favorite(
+              vid: videoModel.vid!,
+              isFavorite: videoDetailModel?.isFavorite ?? false)
+          .then((response) {
+        videoDetailModel!.isFavorite = !(videoDetailModel!.isFavorite!);
+        if (videoDetailModel!.isFavorite!) {
+          videoModel.favorite = videoModel.favorite! + 1;
+        } else {
+          videoModel.favorite = videoModel.favorite! - 1;
+        }
+        setState(() {
+          videoModel = videoModel;
+        });
+        showToast(response["msg"]);
+      });
+    } on NeedAuth catch (e) {
+      myLog(e, StackTrace.current);
+    } on HiNetError catch (e) {
+      myLog(e, StackTrace.current);
+    }
   }
 }

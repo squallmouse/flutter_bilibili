@@ -2,18 +2,23 @@ import 'package:bili/model/home_model.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/format_util.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/util/toast.dart';
 import 'package:flutter/material.dart';
 
 class VideoToolbar extends StatefulWidget {
   bool? isLike;
   bool? isFavorite;
   final VideoModel videoMo;
+  final VoidCallback onTap;
+  final VoidCallback onFavorite;
 
   VideoToolbar(
       {Key? key,
       required this.videoMo,
       required this.isLike,
-      required this.isFavorite})
+      required this.isFavorite,
+      required this.onTap,
+      required this.onFavorite})
       : super(key: key);
 
   @override
@@ -32,16 +37,14 @@ class _VideoToolbarState extends State<VideoToolbar> {
           _buildIconText(
               iconData: Icons.thumb_up_alt_rounded,
               underText: countFormat(widget.videoMo.like ?? 0),
-              ontap: () {
-                myLog("like ==> ", StackTrace.current);
-              },
+              ontap: widget.onTap,
               tintColor: widget.isLike),
           // 不喜欢
           _buildIconText(
             iconData: Icons.thumb_down_alt_rounded,
             underText: "不喜欢",
             ontap: () {
-              myLog("不喜欢 ==> ", StackTrace.current);
+              showToast("不喜欢");
             },
           ),
           //coin
@@ -49,24 +52,20 @@ class _VideoToolbarState extends State<VideoToolbar> {
             iconData: Icons.monetization_on,
             underText: countFormat(widget.videoMo.coin ?? 0),
             ontap: () {
-              myLog("coin ==> ", StackTrace.current);
+              showToast("硬币");
             },
           ),
           //favorite
           _buildIconText(
               iconData: Icons.grade_rounded,
               underText: countFormat(widget.videoMo.favorite ?? 0),
-              ontap: () {
-                myLog("favorite ==> ", StackTrace.current);
-              },
+              ontap: widget.onFavorite,
               tintColor: widget.isFavorite),
           //分享
           _buildIconText(
             iconData: Icons.share_rounded,
             underText: countFormat(widget.videoMo.share ?? 0),
-            ontap: () {
-              myLog("share ==> ", StackTrace.current);
-            },
+            ontap: _onShare,
           ),
         ],
       ),
@@ -104,5 +103,10 @@ class _VideoToolbarState extends State<VideoToolbar> {
             ),
           ),
         ));
+  }
+
+  /// 分享
+  void _onShare() {
+    showToast("分享!!~~");
   }
 }
