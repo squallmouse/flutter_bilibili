@@ -1,14 +1,24 @@
-import 'dart:io';
-
+import 'package:bili/http/core/hi_error.dart';
+import 'package:bili/http/dao/favorite_dao.dart';
+import 'package:bili/http/dao/video_detail_dao.dart';
 import 'package:bili/model/home_model.dart';
+import 'package:bili/model/video_detail_model.dart';
+import 'package:bili/util/color.dart';
+import 'package:bili/util/format_util.dart';
+import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
-import 'package:bili/util/view_utils.dart';
+import 'package:bili/util/toast.dart';
 import 'package:bili/widget/appbar.dart';
+import 'package:bili/widget/expandable_content.dart';
 import 'package:bili/widget/hi_tab.dart';
-import 'package:bili/widget/navigation_bar.dart';
+import 'package:bili/widget/video_card.dart';
+import 'package:bili/widget/video_list_card.dart';
+import 'package:bili/widget/video_toolbar.dart';
 import 'package:bili/widget/video_view.dart';
 
 import 'package:flutter/material.dart';
+
+import '../model/owner.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final Map argumentsMap;
@@ -20,13 +30,36 @@ class VideoDetailPage extends StatefulWidget {
 
 class _VideoDetailPageState extends State<VideoDetailPage>
     with TickerProviderStateMixin {
+  /// 从home页面传过来的数据
   late VideoModel videoModel;
+
+  /// video_detail_list
+  late List<VideoModel> videoList = [];
+
+  /// video_detail 视频 详情页的数据
+  VideoDetailModel? videoDetailModel;
   late TabController _tabController;
   final List<String> tabbarTitles = ["简介", "评论"];
   @override
   void initState() {
     super.initState();
+    videoModel = widget.argumentsMap["mode"];
     _tabController = TabController(length: tabbarTitles.length, vsync: this);
+    _loadData();
+  }
+
+  void _loadData() async {
+    try {
+      videoDetailModel = await VideoDetailDao.get(vid: videoModel.vid ?? "");
+      setState(() {
+        videoModel = videoDetailModel!.videoInfo!;
+        videoList = videoDetailModel!.videoList!;
+      });
+    } on NeedAuth catch (e) {
+      myLog("${e}", StackTrace.current);
+    } on HiNetError catch (e) {
+      myLog(e, StackTrace.current);
+    }
   }
 
   @override
@@ -38,14 +71,15 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   ///build
   @override
   Widget build(BuildContext context) {
-    videoModel = widget.argumentsMap["mode"];
-    myLog("message = ${videoModel}", StackTrace.current);
+    // videoModel = widget.argumentsMap["mode"];
+    // myLog("message = ${videoModel}", StackTrace.current);
     // changeStatusBarColor(statusBarTheme: StatusBarTheme.DARK);
     //状态栏高度
     double top = MediaQuery.of(context).padding.top;
     return Scaffold(
       body: Column(
         children: [
+          /// 状态栏占位
           SizedBox(
             height: top,
             // child: Container(color: Colors.black87),
@@ -54,10 +88,22 @@ class _VideoDetailPageState extends State<VideoDetailPage>
           /// 视频
           _videoPlayer(),
 
-          ///
+          /// tabbar nav
           _detailTabbarNav(),
 
-          // Flexible(child: child)
+          /// 简介 & 评论 --> 内容区域
+          Flexible(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                /// 简介区域内容
+                _buildIntroduction(),
+
+                /// 评论
+                Text("评论~~~~~")
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -98,5 +144,163 @@ class _VideoDetailPageState extends State<VideoDetailPage>
         ),
       ),
     );
+  }
+
+  /// 创建简介区的内容
+  Widget _buildIntroduction() {
+    myLog("_buildIntroduction ==> videoDetailModel", StackTrace.current);
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: ListView(
+        children: [
+          _videoHeadView(),
+          //详情
+          ExpandableContent(
+            model: videoModel,
+          ),
+          //
+          VideoToolbar(
+            videoMo: videoModel,
+            isFavorite: videoDetailModel?.isFavorite ?? false,
+            isLike: videoDetailModel?.isLike ?? false,
+            onTap: _onTap,
+            onFavorite: _onFavorite,
+          ),
+          // 一条横线
+          Divider(
+            height: 1,
+          ),
+          if (videoList.length > 0) ..._buildVideoList(),
+        ],
+      ),
+    );
+  }
+
+  /// 作者...关注
+  Widget _videoHeadView() {
+    Owner owner = videoModel.owner!;
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(15, 15, 0, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  child: ImageCachedUtils(owner.face ?? "",
+                      iwidth: 40, iheight: 40),
+                ),
+                Padding(padding: EdgeInsets.only(left: 15)),
+                Column(
+                  children: [
+                    /// 名字
+                    Text(
+                      owner.name ?? "noname",
+                      style: TextStyle(
+                          color: primary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+
+                    /// 粉丝
+                    Text(
+                      "${countFormat(owner.fans ?? 0)}粉丝",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            /// 关注
+            Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Container(
+                height: 30,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: MaterialButton(
+                  onPressed: () {
+                    myLog("关注按钮 -- click", StackTrace.current);
+                  },
+                  color: primary,
+                  child: Text(
+                    "+关注",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 点赞
+  void _onTap() {
+    try {
+      FavoriteDao.favorite(
+              vid: videoModel.vid!,
+              isFavorite: videoDetailModel?.isLike ?? false)
+          .then((response) {
+        videoDetailModel!.isLike = !(videoDetailModel!.isLike!);
+        if (videoDetailModel!.isLike!) {
+          videoModel.like = videoModel.like! + 1;
+        } else {
+          videoModel.like = videoModel.like! - 1;
+        }
+        setState(() {
+          videoModel = videoModel;
+        });
+        showToast(response["msg"]);
+      });
+    } on NeedAuth catch (e) {
+      myLog(e, StackTrace.current);
+    } on HiNetError catch (e) {
+      myLog(e, StackTrace.current);
+    }
+  }
+
+  /// 收藏
+  void _onFavorite() {
+    try {
+      FavoriteDao.favorite(
+              vid: videoModel.vid!,
+              isFavorite: videoDetailModel?.isFavorite ?? false)
+          .then((response) {
+        videoDetailModel!.isFavorite = !(videoDetailModel!.isFavorite!);
+        if (videoDetailModel!.isFavorite!) {
+          videoModel.favorite = videoModel.favorite! + 1;
+        } else {
+          videoModel.favorite = videoModel.favorite! - 1;
+        }
+        setState(() {
+          videoModel = videoModel;
+        });
+        showToast(response["msg"]);
+      });
+    } on NeedAuth catch (e) {
+      myLog(e, StackTrace.current);
+    } on HiNetError catch (e) {
+      myLog(e, StackTrace.current);
+    }
+  }
+
+  /// 详情页下面的 videolist
+  _buildVideoList() {
+    //TODO :
+    return videoList.map((VideoModel mo) {
+      return VideoDetailCard(videoModel: mo);
+    }).toList();
   }
 }

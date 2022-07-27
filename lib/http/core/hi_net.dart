@@ -3,6 +3,7 @@ import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/core/hi_net_adapter.dart';
 import 'package:bili/http/core/mock_adapter.dart';
 import 'package:bili/http/request/base_request.dart';
+import 'package:bili/util/my_log.dart';
 
 class HiNet {
   HiNet._();
@@ -26,15 +27,17 @@ class HiNet {
     } on HiNetError catch (e) {
       error = e;
       response = e.data;
-      printLog(e);
+
+      myLog("${e}", StackTrace.current);
     } catch (e) {
       //其它异常
       error = e;
-      printLog(e);
+
+      myLog("${e}", StackTrace.current);
     }
 
     if (response == null) {
-      printLog("response : 为空     |$error");
+      myLog("response : 为空     |$error", StackTrace.current);
     }
     // 只返回有用的数据
     var result = response?.data;
@@ -62,8 +65,8 @@ class HiNet {
     return adapter.send(request);
   }
 
-  // 打印
-  void printLog(log) {
-    print("hi_net -->  ${log.toString()}");
-  }
+  // // 打印
+  // void printLog(log) {
+  //   print("hi_net -->  ${log.toString()}");
+  // }
 }
