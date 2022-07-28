@@ -38,7 +38,10 @@ abstract class HiRefershPage<M, L, pageChild extends StatefulWidget>
           scController.position.maxScrollExtent - scController.position.pixels;
       myLog("dis ==> ${dis} ", StackTrace.current);
       //当距离底部不足300时加载更多
-      if (dis < 300 && !isLoading) {
+      if (dis < 300 &&
+          !isLoading &&
+          // fix 当列表高度不够的时候,不执行加载更多
+          scController.position.maxScrollExtent != 0) {
         print("--------loading----------");
         myLog("dis ==> ${dis} ", StackTrace.current);
         loadData(loadMore: true);

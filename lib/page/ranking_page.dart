@@ -1,4 +1,4 @@
-import 'package:bili/page/refersh_page.dart';
+import 'package:bili/page/ranking_refersh_page.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/widget/hi_tab.dart';
 import 'package:bili/widget/navigation_bar.dart';

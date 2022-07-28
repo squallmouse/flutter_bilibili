@@ -1,27 +1,26 @@
 import 'package:bili/core/hi_refersh_page.dart';
-import 'package:bili/http/dao/ranking_dao.dart';
+import 'package:bili/http/dao/favorites_page_dao.dart';
+import 'package:bili/model/favorite_model.dart';
 import 'package:bili/model/home_model.dart';
-import 'package:bili/model/ranking_model.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/widget/video_list_card.dart';
 import 'package:flutter/material.dart';
 
-class RefershPage extends StatefulWidget {
-  Map? dict;
-  RefershPage({Key? key, this.dict}) : super(key: key);
+class FavoritesRefershPage extends StatefulWidget {
+  FavoritesRefershPage({Key? key}) : super(key: key);
 
   @override
-  State<RefershPage> createState() => _RefershPageState();
+  State<FavoritesRefershPage> createState() => _FavoritesRefershPageState();
 }
 
-class _RefershPageState
-    extends HiRefershPage<RankingModel, VideoModel, RefershPage> {
+class _FavoritesRefershPageState
+    extends HiRefershPage<FavoriteModel, VideoModel, FavoritesRefershPage> {
   @override
   Widget buildPageChild() {
-    // return Text("data");
     return ListView.builder(
-      itemCount: dataArr.length,
+      physics: AlwaysScrollableScrollPhysics(),
       controller: scController,
+      itemCount: dataArr.length,
       itemBuilder: (context, index) {
         VideoModel mo = dataArr[index];
         return VideoDetailCard(videoModel: mo);
@@ -35,23 +34,19 @@ class _RefershPageState
       return;
     }
     isLoading = true;
-    String type = widget.dict!["type"];
     if (loadMore) {
       pageIndex += 1;
     } else {
       pageIndex = 1;
     }
-    myLog("pageindex ==>> ${pageIndex} ", StackTrace.current);
-    RankingModel rkMo =
-        await RankingDao.fetch(type: type, pageIndex: pageIndex);
-    List<VideoModel> tempArr = rkMo.list ?? [];
-    myLog("tempArr ==> ${tempArr[0]}", StackTrace.current);
+    var mo = await FavoPageDao.fetch(pageIndex: pageIndex);
+    List<VideoModel> tempList = mo.list ?? [];
     setState(() {
       myLog("setState", StackTrace.current);
       if (loadMore) {
-        dataArr.addAll(tempArr);
+        dataArr.addAll(tempList);
       } else {
-        dataArr = tempArr;
+        dataArr = tempList;
       }
       isLoading = false;
     });

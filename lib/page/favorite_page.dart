@@ -1,3 +1,4 @@
+import 'package:bili/page/favorites_refersh_page.dart';
 import 'package:flutter/material.dart';
 
 ///收藏
@@ -15,9 +16,7 @@ class _FavoritePageState extends State<FavoritePage> {
       appBar: AppBar(
         title: Text("收藏"),
       ),
-      body: Center(
-        child: Text("收藏"),
-      ),
+      body: FavoritesRefershPage(),
     );
   }
 }
