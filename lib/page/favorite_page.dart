@@ -12,7 +12,9 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("收藏"),
+      ),
       body: Center(
         child: Text("收藏"),
       ),

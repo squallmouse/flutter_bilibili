@@ -1,9 +1,8 @@
 import 'package:bili/http/request/base_request.dart';
 
-/// 点赞
-class LikeRequest extends BaseRequest {
+class RankingRequest extends BaseRequest {
   @override
-  HttpMethod get httpMethod => HttpMethod.POST;
+  HttpMethod get httpMethod => HttpMethod.GET;
 
   @override
   bool needLogin() {
@@ -12,6 +11,6 @@ class LikeRequest extends BaseRequest {
 
   @override
   String path() {
-    return "/uapi/fa/like/";
+    return "/uapi/fa/ranking/";
   }
 }
