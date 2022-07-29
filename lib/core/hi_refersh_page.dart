@@ -32,11 +32,12 @@ abstract class HiRefershPage<M, L, pageChild extends StatefulWidget>
   void initState() {
     super.initState();
     //控制器添加监听
+
     scController.addListener(() {
       // 控制器的最大距离 - 滑动的距离
       var dis =
           scController.position.maxScrollExtent - scController.position.pixels;
-      myLog("dis ==> ${dis} ", StackTrace.current);
+
       //当距离底部不足300时加载更多
       if (dis < 300 &&
           !isLoading &&
@@ -50,6 +51,8 @@ abstract class HiRefershPage<M, L, pageChild extends StatefulWidget>
 
     /// 加载数据
     loadData();
+
+    ///
   }
 
   @override

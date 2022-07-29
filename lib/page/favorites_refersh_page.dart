@@ -18,6 +18,10 @@ class _FavoritesRefershPageState
   @override
   Widget buildPageChild() {
     return ListView.builder(
+      findChildIndexCallback: (key) {
+        myLog("===>>>}} ${key}", StackTrace.current);
+        return 1;
+      },
       physics: AlwaysScrollableScrollPhysics(),
       controller: scController,
       itemCount: dataArr.length,
