@@ -1,3 +1,6 @@
+import 'package:bili/navigator/hi_navigator.dart';
+import 'package:bili/page/favorites_refersh_page.dart';
+import 'package:bili/page/video_detail_page.dart';
 import 'package:flutter/material.dart';
 
 ///收藏
@@ -12,10 +15,10 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Text("收藏"),
+      appBar: AppBar(
+        title: Text("收藏"),
       ),
+      body: FavoritesRefershPage(),
     );
   }
 }

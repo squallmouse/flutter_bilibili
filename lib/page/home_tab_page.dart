@@ -18,8 +18,11 @@ class HomeTabPage extends StatefulWidget {
   /// 轮播图
   final List<BannerModel>? bannerList;
 
-  HomeTabPage({Key? key, required this.categoryName, this.bannerList})
-      : super(key: key);
+  HomeTabPage({
+    Key? key,
+    required this.categoryName,
+    this.bannerList,
+  }) : super(key: key);
   @override
   State<HomeTabPage> createState() => _HomeTabPageState();
 }
@@ -116,7 +119,10 @@ class _HomeTabPageState extends State<HomeTabPage>
             _loadDataVideoList = [];
           }
           setState(() {
-            _loadDataVideoList = [..._loadDataVideoList, ...tempList];
+            _loadDataVideoList = [
+              ..._loadDataVideoList,
+              ...tempList,
+            ];
             _isLoading = false;
           });
         },

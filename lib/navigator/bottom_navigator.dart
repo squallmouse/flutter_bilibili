@@ -19,7 +19,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   final _defaultColor = Colors.grey;
   final _activeColor = primary;
   int _currentIndex = 0;
-  final PageController _pageviewController = PageController(initialPage: 0);
+  final PageController _pageviewController = PageController(initialPage: 1);
   late List<Widget> _pages;
 
   //*  ------------------------------ */

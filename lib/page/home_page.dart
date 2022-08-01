@@ -5,7 +5,6 @@ import 'package:bili/http/dao/home_dao.dart';
 import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/home_tab_page.dart';
-import 'package:bili/util/color.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/view_utils.dart';
 import 'package:bili/widget/hi_tab.dart';
@@ -13,8 +12,6 @@ import 'package:bili/widget/home_navigation.dart';
 import 'package:bili/widget/loading_container.dart';
 import 'package:bili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:underline_indicator/underline_indicator.dart';
 
 class HomePage extends StatefulWidget {
   // late final ValueChanged<VideoModel> onJumpToDetail;
@@ -49,7 +46,7 @@ class _HomePageState extends HiState<HomePage>
     super.dispose();
   }
 
-  /// 监听声明周期变化
+  /// 监听生命周期变化
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -76,6 +73,8 @@ class _HomePageState extends HiState<HomePage>
   @override
   void initState() {
     super.initState();
+
+    /// 应用前后台切换监听
     WidgetsBinding.instance.addObserver(this);
     _tabController = TabController(length: _categoryList.length, vsync: this);
     HiNavigator.getInstance().addListener(this.listener = (current, pre) {
@@ -161,37 +160,7 @@ class _HomePageState extends HiState<HomePage>
       tabController: _tabController,
       // childs: tabList(),
     );
-    // return TabBar(
-    //   tabs: tabList(),
-    //   onTap: (page) => print("page ==> ${page}"),
-    //   isScrollable: true,
-    //   unselectedLabelColor: Colors.black,
-    //   labelColor: primary,
-    //   controller: _tabController,
-    //   // indicator: BoxDecoration(),
-    //   indicator: UnderlineIndicator(
-    //     strokeCap: StrokeCap.round, // Set your line endings.
-    //     borderSide: BorderSide(
-    //       color: primary,
-    //       width: 3,
-    //     ),
-    //     insets: EdgeInsets.fromLTRB(15, 0, 15, 0),
-    //   ),
-    // );
   }
 
-  // /// 一个个具体的tab
-  // List<Widget> tabList() {
-  //   return _categoryList.map((tab) {
-  //     return Tab(
-  //       child: Padding(
-  //         padding: EdgeInsets.only(left: 5, right: 5),
-  //         child: Text(
-  //           tab.name ?? "xyz???",
-  //           style: TextStyle(fontSize: 16),
-  //         ),
-  //       ),
-  //     );
-  //   }).toList();
-  // }
+  ///
 }

@@ -171,19 +171,3 @@ class BiliRouteDelegate extends RouterDelegate
     myLog("setNewRoutePath 应该是永远永不到了吧....", StackTrace.current);
   }
 }
-
-///定义路由数据 path
-// class BiliRoutePath {
-//   final String? location;
-//   BiliRoutePath.home() : location = "/";
-//   BiliRoutePath.detail() : location = "/detail";
-// }
-
-// // 创建页面
-// pageWrap(Widget child) {
-//   myLog("pageWrap", StackTrace.current);
-//   return MaterialPage(
-//     child: child,
-//     key: ValueKey(child.hashCode),
-//   );
-// }

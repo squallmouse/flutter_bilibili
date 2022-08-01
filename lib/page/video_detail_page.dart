@@ -1,8 +1,10 @@
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/favorite_dao.dart';
+import 'package:bili/http/dao/like_dao.dart';
 import 'package:bili/http/dao/video_detail_dao.dart';
 import 'package:bili/model/home_model.dart';
 import 'package:bili/model/video_detail_model.dart';
+import 'package:bili/page/favorites_refersh_page.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/format_util.dart';
 import 'package:bili/util/image_cached.dart';
@@ -249,9 +251,8 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   /// 点赞
   void _onTap() {
     try {
-      FavoriteDao.favorite(
-              vid: videoModel.vid!,
-              isFavorite: videoDetailModel?.isLike ?? false)
+      LikeDao.like(
+              vid: videoModel.vid!, isLike: videoDetailModel?.isLike ?? false)
           .then((response) {
         videoDetailModel!.isLike = !(videoDetailModel!.isLike!);
         if (videoDetailModel!.isLike!) {
