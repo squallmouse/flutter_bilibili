@@ -1,4 +1,6 @@
+import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/favorites_refersh_page.dart';
+import 'package:bili/page/video_detail_page.dart';
 import 'package:flutter/material.dart';
 
 ///收藏
