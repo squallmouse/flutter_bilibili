@@ -168,6 +168,6 @@ class BiliRouteDelegate extends RouterDelegate
 
   @override
   Future<void> setNewRoutePath(configuration) async {
-    myLog("setNewRoutePath 应该是永远永不到了吧....", StackTrace.current);
+    myLog("setNewRoutePath 应该是永远用不到了吧....", StackTrace.current);
   }
 }

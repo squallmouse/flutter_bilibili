@@ -3,6 +3,7 @@ import 'package:bili/http/dao/profile_dao.dart';
 import 'package:bili/model/profile_model.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/widget/hi_blur.dart';
 import 'package:flutter/material.dart';
 
 ///我的
@@ -57,10 +58,27 @@ class _ProfilePageState extends State<ProfilePage> {
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverAppBar(
-            expandedHeight: 160,
-            pinned: true,
-            backgroundColor: Colors.orange,
-            flexibleSpace: _buildHead(),
+            expandedHeight: 160, // 扩展高度
+            pinned: true, // 标题栏是否固定
+            // 定义固定空间
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.parallax,
+              titlePadding: EdgeInsets.only(left: 0),
+              title: _buildHead(),
+              background: Stack(
+                children: [
+                  Positioned.fill(
+                      child: Image.asset(
+                    "images/1.jpg",
+                    fit: BoxFit.cover,
+                  )),
+                  Positioned.fill(
+                      child: HiBlur(
+                    sigma: 20,
+                  )),
+                ],
+              ),
+            ),
           )
         ];
       },
@@ -83,9 +101,9 @@ class _ProfilePageState extends State<ProfilePage> {
       return Container();
     }
     return Container(
-      padding: EdgeInsets.only(bottom: 30),
-      color: Colors.pink,
-      alignment: Alignment.bottomLeft,
+      // padding: EdgeInsets.only(bottom: 30),
+      // color: Colors.pink,
+      // alignment: Alignment.bottomLeft,
       child: Row(
         children: [
           SizedBox(width: 20),
