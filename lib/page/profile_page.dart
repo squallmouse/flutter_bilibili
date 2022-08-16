@@ -4,6 +4,7 @@ import 'package:bili/model/profile_model.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/widget/hi_blur.dart';
+import 'package:bili/widget/hi_flexible_header.dart';
 import 'package:flutter/material.dart';
 
 ///我的
@@ -23,10 +24,10 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     scrollController = ScrollController();
-    scrollController.addListener(() {
-      var offset = scrollController.offset;
-      myLog("offset == > ${offset}", StackTrace.current);
-    });
+    // scrollController.addListener(() {
+    //   var offset = scrollController.offset;
+    //   myLog("offset == > ${offset}", StackTrace.current);
+    // });
     _loadData();
   }
 
@@ -74,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   )),
                   Positioned.fill(
                       child: HiBlur(
-                    sigma: 20,
+                    sigma: 10,
                   )),
                 ],
               ),
@@ -100,28 +101,10 @@ class _ProfilePageState extends State<ProfilePage> {
     if (profileModel == null) {
       return Container();
     }
-    return Container(
-      // padding: EdgeInsets.only(bottom: 30),
-      // color: Colors.pink,
-      // alignment: Alignment.bottomLeft,
-      child: Row(
-        children: [
-          SizedBox(width: 20),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(23),
-            child: ImageCachedUtils(
-              profileModel?.face ?? "",
-              iwidth: 46,
-              iheight: 46,
-            ),
-          ),
-          SizedBox(width: 8),
-          Text(
-            profileModel?.name ?? "yh_noname",
-            style: TextStyle(fontSize: 12),
-          )
-        ],
-      ),
+    return HiFlexibleHeader(
+      face: profileModel?.face ?? "",
+      name: profileModel?.name ?? "",
+      scrollController: scrollController,
     );
   }
 }
