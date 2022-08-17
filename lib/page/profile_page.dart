@@ -2,6 +2,7 @@ import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/profile_dao.dart';
 import 'package:bili/model/profile_model.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/widget/course_card.dart';
 import 'package:bili/widget/hi_banner.dart';
 import 'package:bili/widget/hi_blur.dart';
 import 'package:bili/widget/hi_flexible_header.dart';
@@ -94,9 +95,11 @@ class _ProfilePageState extends State<ProfilePage>
       },
       body: ListView(
         padding: EdgeInsets.only(top: 10),
-        children: [
-          ..._buildContent(),
-        ],
+        children: profileModel == null
+            ? []
+            : [
+                ..._buildContent(),
+              ],
       ),
     );
   }
@@ -156,6 +159,8 @@ class _ProfilePageState extends State<ProfilePage>
     return [
       // banner
       ..._buildBanner(),
+      // 课程
+      _buildCourseCell(),
     ];
   }
 
@@ -164,8 +169,14 @@ class _ProfilePageState extends State<ProfilePage>
     return [
       HiBanner(
         bannerList: profileModel!.bannerList!,
+        bannerHeight: 120,
         padding: EdgeInsets.only(left: 10, right: 10),
       )
     ];
+  }
+
+  /// 课程
+  _buildCourseCell() {
+    return CourseCard(courseList: profileModel!.courseList!);
   }
 }
