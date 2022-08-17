@@ -16,7 +16,13 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("收藏"),
+        title: Container(
+          alignment: Alignment.bottomCenter,
+          child: Text(
+            "收藏",
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
       body: FavoritesRefershPage(),
     );

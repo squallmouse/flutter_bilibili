@@ -18,8 +18,8 @@ class BottomNavigator extends StatefulWidget {
 class _BottomNavigatorState extends State<BottomNavigator> {
   final _defaultColor = Colors.grey;
   final _activeColor = primary;
-  int _currentIndex = 0;
-  final PageController _pageviewController = PageController(initialPage: 1);
+  int _currentIndex = 3;
+  final PageController _pageviewController = PageController(initialPage: 3);
   late List<Widget> _pages;
 
   //*  ------------------------------ */
