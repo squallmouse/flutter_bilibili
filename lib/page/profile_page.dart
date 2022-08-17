@@ -1,8 +1,8 @@
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/profile_dao.dart';
 import 'package:bili/model/profile_model.dart';
-import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/widget/hi_banner.dart';
 import 'package:bili/widget/hi_blur.dart';
 import 'package:bili/widget/hi_flexible_header.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,9 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>
+    with AutomaticKeepAliveClientMixin {
+  //
   ProfileModel? profileModel;
   late ScrollController scrollController;
   //*  ------------------------------ */
@@ -47,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       // appBar: AppBar(),
       body: _buildBody(),
@@ -77,21 +80,23 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: HiBlur(
                     sigma: 10,
                   )),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: _buildProfileTab(),
+                  )
                 ],
               ),
             ),
           )
         ];
       },
-      body: MediaQuery.removePadding(
-        removeTop: true,
-        context: context,
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return Text(" ==> ${index}");
-          },
-          itemCount: 20,
-        ),
+      body: ListView(
+        padding: EdgeInsets.only(top: 10),
+        children: [
+          ..._buildContent(),
+        ],
       ),
     );
   }
@@ -106,5 +111,61 @@ class _ProfilePageState extends State<ProfilePage> {
       name: profileModel?.name ?? "",
       scrollController: scrollController,
     );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  /// 头部的tab
+  _buildProfileTab() {
+    if (profileModel == null) {
+      return Container();
+    }
+    return Container(
+      padding: EdgeInsets.only(top: 5, bottom: 5),
+      decoration: BoxDecoration(color: Colors.white54),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildIconText('收藏', profileModel!.favorite!),
+          _buildIconText('点赞', profileModel!.like!),
+          _buildIconText('浏览', profileModel!.browsing!),
+          _buildIconText('金币', profileModel!.coin!),
+          _buildIconText('粉丝', profileModel!.fans!),
+        ],
+      ),
+    );
+  }
+
+  /// 上数字 下文字
+  _buildIconText(String text, int count) {
+    return Column(
+      children: [
+        Text('$count', style: TextStyle(fontSize: 15, color: Colors.black87)),
+        Text(text, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+      ],
+    );
+  }
+
+  /// 页面主体内容
+
+  _buildContent() {
+    if (profileModel == null) {
+      return [];
+    }
+    return [
+      // banner
+      ..._buildBanner(),
+    ];
+  }
+
+  /// banner 图
+  _buildBanner() {
+    return [
+      HiBanner(
+        bannerList: profileModel!.bannerList!,
+        padding: EdgeInsets.only(left: 10, right: 10),
+      )
+    ];
   }
 }
