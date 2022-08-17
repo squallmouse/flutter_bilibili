@@ -1,6 +1,7 @@
 import 'package:bili/model/profile_model.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/util/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 class CourseCard extends StatelessWidget {
@@ -75,7 +76,8 @@ class CourseCard extends StatelessWidget {
   _buildCard(CourseModel mo, double width, double height) {
     return InkWell(
       onTap: () {
-        myLog("调换到H5", StackTrace.current);
+        // 课程 跳转到 网页
+        urlLauncher_util(mo.url);
       },
       child: Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 5, 7),

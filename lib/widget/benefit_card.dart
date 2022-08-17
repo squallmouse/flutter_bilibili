@@ -1,8 +1,10 @@
 import 'package:bili/model/profile_model.dart';
-import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/util/toast.dart';
+import 'package:bili/util/url_launcher.dart';
 import 'package:bili/widget/hi_blur.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BenefitCard extends StatelessWidget {
   final List<BenefitModel> benefitList;
@@ -62,6 +64,13 @@ class BenefitCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         myLog("调换到H5", StackTrace.current);
+        if (mo.url!.startsWith("http")) {
+          urlLauncher_util(mo.url);
+        } else {
+          Clipboard.setData(ClipboardData(text: mo.url)).then((value) {
+            showToast("${mo.url} --> 已经复制到剪切板");
+          });
+        }
       },
       child: Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 5, 7),
