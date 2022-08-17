@@ -2,6 +2,7 @@ import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/profile_dao.dart';
 import 'package:bili/model/profile_model.dart';
 import 'package:bili/util/my_log.dart';
+import 'package:bili/widget/benefit_card.dart';
 import 'package:bili/widget/course_card.dart';
 import 'package:bili/widget/hi_banner.dart';
 import 'package:bili/widget/hi_blur.dart';
@@ -161,6 +162,8 @@ class _ProfilePageState extends State<ProfilePage>
       ..._buildBanner(),
       // 课程
       _buildCourseCell(),
+      // 增值服务
+      _buildBenefitCell(),
     ];
   }
 
@@ -178,5 +181,9 @@ class _ProfilePageState extends State<ProfilePage>
   /// 课程
   _buildCourseCell() {
     return CourseCard(courseList: profileModel!.courseList!);
+  }
+
+  _buildBenefitCell() {
+    return BenefitCard(benefitList: profileModel!.benefitList!);
   }
 }
