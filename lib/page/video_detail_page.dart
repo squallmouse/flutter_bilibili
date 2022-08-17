@@ -1,3 +1,4 @@
+import 'package:bili/barrage/hi_socket.dart';
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/favorite_dao.dart';
 import 'package:bili/http/dao/like_dao.dart';
@@ -7,6 +8,7 @@ import 'package:bili/model/video_detail_model.dart';
 import 'package:bili/page/favorites_refersh_page.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/format_util.dart';
+import 'package:bili/util/hi_constants.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/toast.dart';
@@ -42,12 +44,25 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   VideoDetailModel? videoDetailModel;
   late TabController _tabController;
   final List<String> tabbarTitles = ["简介", "评论"];
+
+  /// HiSocket
+  late HiSocket _hiSocket;
+
+  //*  ------------------------------ */
+  //*  methods
   @override
   void initState() {
     super.initState();
     videoModel = widget.argumentsMap["mode"];
     _tabController = TabController(length: tabbarTitles.length, vsync: this);
+
+    /// socket
+    _hiSocket = HiSocket(HiConstants.headers());
+    // 获取数据
     _loadData();
+    _hiSocket.open(videoModel.vid!).listen((value) {
+      myLog("==>> ${value} ", StackTrace.current);
+    });
   }
 
   void _loadData() async {
@@ -299,7 +314,6 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   /// 详情页下面的 videolist
   _buildVideoList() {
-    //TODO :
     return videoList.map((VideoModel mo) {
       return VideoDetailCard(videoModel: mo);
     }).toList();
