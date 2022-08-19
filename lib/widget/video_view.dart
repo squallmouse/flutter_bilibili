@@ -16,6 +16,7 @@ class VideoView extends StatefulWidget {
   final bool looping; // 循环播放
   final double aspectRatio; // 缩放比例
   final Widget overlayUI;
+  final Widget? barrageUI;
   // late final MYMaterialControls;
   VideoView(
       {Key? key,
@@ -24,7 +25,8 @@ class VideoView extends StatefulWidget {
       this.autoPlay = false,
       this.looping = false,
       this.aspectRatio = 16 / 9,
-      required this.overlayUI})
+      required this.overlayUI,
+      this.barrageUI})
       : super(key: key);
 
   @override
@@ -66,6 +68,7 @@ class _VideoViewState extends State<VideoView> {
       customControls: MyMaterialControls(
         overlayUI: widget.overlayUI, // 顶部渐变
         bottomGradient: blackLinearGradient(), //底部渐变
+        barrageUI: widget.barrageUI,
       ),
     );
     _chewieController.addListener(_fullScreenListen);

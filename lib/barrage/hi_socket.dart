@@ -73,6 +73,6 @@ abstract class ISocket {
   /// 关闭连接
   void close();
 
-  /// 接受弹幕
+  /// 接受弹幕 监听服务器返回的消息
   ISocket listen(ValueChanged<List<BarrageModel>> callBack);
 }

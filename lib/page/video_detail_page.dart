@@ -1,3 +1,4 @@
+import 'package:bili/barrage/hi_barrage.dart';
 import 'package:bili/barrage/hi_socket.dart';
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/favorite_dao.dart';
@@ -39,6 +40,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   /// video_detail_list
   late List<VideoModel> videoList = [];
+  var _barrageKey = GlobalKey<HiBarrageState>();
 
   /// video_detail 视频 详情页的数据
   VideoDetailModel? videoDetailModel;
@@ -55,14 +57,8 @@ class _VideoDetailPageState extends State<VideoDetailPage>
     super.initState();
     videoModel = widget.argumentsMap["mode"];
     _tabController = TabController(length: tabbarTitles.length, vsync: this);
-
-    /// socket
-    _hiSocket = HiSocket(HiConstants.headers());
     // 获取数据
     _loadData();
-    _hiSocket.open(videoModel.vid!).listen((value) {
-      myLog("==>> ${value} ", StackTrace.current);
-    });
   }
 
   void _loadData() async {
@@ -132,6 +128,12 @@ class _VideoDetailPageState extends State<VideoDetailPage>
       url: videoModel.url ?? "",
       cover: videoModel.cover ?? "",
       overlayUI: videoAppBar(),
+      barrageUI: HiBarrage(
+        key: _barrageKey,
+        vid: videoModel.vid!,
+        // headers: HiConstants.headers(),
+        autoPlay: true,
+      ),
     );
   }
 
