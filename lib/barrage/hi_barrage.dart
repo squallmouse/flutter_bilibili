@@ -164,5 +164,7 @@ class HiBarrageState extends State<HiBarrage> implements IBarrage {
 
   void _onComplete(id) {
     myLog("弹幕发送完毕===>>> ${id}", StackTrace.current);
+    //弹幕播放完毕将其从弹幕widget集合中剔除
+    _barrageItemList.removeWhere((element) => element.id == id);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:bili/barrage/barrage_transition.dart';
 import 'package:flutter/material.dart';
 
 /// 弹幕widget
@@ -7,8 +8,9 @@ class BarrageItem extends StatelessWidget {
   final Widget child;
   final ValueChanged onComplete;
   final Duration duration;
+  late var _key = GlobalKey<BarrageTransitionState>();
   //
-  const BarrageItem({
+  BarrageItem({
     Key? key,
     required this.id,
     required this.top,
@@ -21,7 +23,14 @@ class BarrageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned.fill(
       top: top,
-      child: child,
+      child: BarrageTransition(
+        key: _key,
+        child: child,
+        duration: duration,
+        onComplete: (value) {
+          onComplete(id);
+        },
+      ),
     );
   }
 }
