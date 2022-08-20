@@ -19,6 +19,9 @@ class BarrageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Positioned.fill(
+      top: top,
+      child: child,
+    );
   }
 }

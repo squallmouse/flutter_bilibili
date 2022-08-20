@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:bili/barrage/barrage_item.dart';
+import 'package:bili/barrage/barrage_view_util.dart';
 import 'package:bili/barrage/hi_socket.dart';
 import 'package:bili/barrage/i_barrage.dart';
 import 'package:bili/model/barrage_model.dart';
@@ -78,6 +79,7 @@ class HiBarrageState extends State<HiBarrage> implements IBarrage {
       child: Stack(
         children: [
           // 防止stack的child为空
+          Container()
         ]..addAll(_barrageItemList),
       ),
     );
@@ -105,7 +107,7 @@ class HiBarrageState extends State<HiBarrage> implements IBarrage {
       if (_barrageModelList.isNotEmpty) {
         // 将发送的弹幕从集合中剔除
         var temp = _barrageModelList.removeAt(0);
-        addBarrage(temp);
+        addBarrage(temp); // 添加一条弹幕
         myLog("弹幕发送 ==> ${temp.content}", StackTrace.current);
       } else {
         myLog("所有的弹幕已经发送完毕", StackTrace.current);
@@ -143,5 +145,24 @@ class HiBarrageState extends State<HiBarrage> implements IBarrage {
     }
   }
 
-  void addBarrage(BarrageModel temp) {}
+  void addBarrage(BarrageModel model) {
+    double perRowHeight = 30;
+    var line = _barrageIndex % widget.lineCount;
+    _barrageIndex++;
+    var top = perRowHeight * line + widget.top;
+    // 为每条弹幕生成一个id
+    String id = "${_random.nextInt(10000)}:${model.content}";
+    var item = BarrageItem(
+      id: id,
+      top: top,
+      child: BarrageViewUtil.barrageView(model),
+      onComplete: _onComplete,
+    );
+    _barrageItemList.add(item);
+    setState(() {});
+  }
+
+  void _onComplete(id) {
+    myLog("弹幕发送完毕===>>> ${id}", StackTrace.current);
+  }
 }
