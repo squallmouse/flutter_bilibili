@@ -55,7 +55,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   final List<String> tabbarTitles = ["简介", "评论"];
 
   /// HiSocket
-  late HiSocket _hiSocket;
+  // late HiSocket _hiSocket;
 
   //*  ------------------------------ */
   //*  methods
@@ -345,7 +345,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
       },
     )).then((value) {
       print("---->> input : ${value}");
-      _barrageKey.currentState?.send("??????sdfhaksdhjfkahsdfksa");
+      _barrageKey.currentState?.send(value);
     });
   }
 }
