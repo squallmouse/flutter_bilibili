@@ -1,3 +1,4 @@
+import 'package:bili/barrage/barrage_input.dart';
 import 'package:bili/barrage/hi_barrage.dart';
 import 'package:bili/barrage/hi_socket.dart';
 import 'package:bili/http/core/hi_error.dart';
@@ -22,6 +23,7 @@ import 'package:bili/widget/video_toolbar.dart';
 import 'package:bili/widget/video_view.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay/flutter_overlay.dart';
 
 import '../model/owner.dart';
 
@@ -40,7 +42,12 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   /// video_detail_list
   late List<VideoModel> videoList = [];
+
+  /// 弹幕 key
   var _barrageKey = GlobalKey<HiBarrageState>();
+
+  /// 输入框显示
+  bool _inoutShowing = false;
 
   /// video_detail 视频 详情页的数据
   VideoDetailModel? videoDetailModel;
@@ -154,9 +161,14 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             _tabbar,
             Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.live_tv_rounded,
-                color: Colors.grey,
+              child: InkWell(
+                onTap: () {
+                  _buildOverlay();
+                },
+                child: Icon(
+                  Icons.live_tv_rounded,
+                  color: Colors.grey,
+                ),
               ),
             )
           ],
@@ -319,5 +331,21 @@ class _VideoDetailPageState extends State<VideoDetailPage>
     return videoList.map((VideoModel mo) {
       return VideoDetailCard(videoModel: mo);
     }).toList();
+  }
+
+  void _buildOverlay() {
+    setState(() {
+      _inoutShowing = true;
+    });
+    HiOverlay.show(context, child: BarrageInput(
+      onTabClose: () {
+        setState(() {
+          _inoutShowing = false;
+        });
+      },
+    )).then((value) {
+      print("---->> input : ${value}");
+      _barrageKey.currentState?.send("??????sdfhaksdhjfkahsdfksa");
+    });
   }
 }
