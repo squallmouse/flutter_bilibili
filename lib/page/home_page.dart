@@ -57,9 +57,9 @@ class _HomePageState extends HiState<HomePage>
         break;
       case AppLifecycleState.resumed: //从后台切换到了前台
         myLog("从后台切换到了前台", StackTrace.current);
-        if (Platform.isAndroid) {
-          changeStatusBarColor();
-        }
+
+        changeStatusBarColor(statusBarTheme: StatusBarTheme.DARK);
+
         break;
       case AppLifecycleState.paused: // 界面不可见,在后台
         myLog("界面不可见,在后台", StackTrace.current);
@@ -122,8 +122,9 @@ class _HomePageState extends HiState<HomePage>
               ),
             ),
             Container(
-              color: Colors.white,
+              // color: Colors.white,
               // padding: EdgeInsets.only(top: 0),
+              decoration: bottomBoxShadow(context),
               child: _tabBar(),
             ),
             Flexible(

@@ -95,7 +95,7 @@ class _LoginInputState extends State<LoginInput> {
         // 文本类型
         style: TextStyle(
           fontSize: 16,
-          color: Colors.black,
+          // color: Colors.black, // 适配darkmode 不同的模式有不同的效果
           fontWeight: FontWeight.w300,
         ),
         // 输入框的样式

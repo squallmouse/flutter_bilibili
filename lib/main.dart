@@ -46,7 +46,7 @@ class _BiliAppState extends State<BiliApp> {
           widget2 = Scaffold(body: CupertinoActivityIndicator());
         }
         return MultiProvider(
-          providers: topProvider,
+          providers: topProviders,
           child: Consumer<ThemeProvider>(
             builder: (
               BuildContext context,
@@ -59,9 +59,9 @@ class _BiliAppState extends State<BiliApp> {
 
                 // primaryColor的值是一个Color类型的，为所有的Widget 提供基础颜色；
                 // primarySwatch的值是一个MaterialColor类型，而不是Color类型的，主要为Material 系列组件提供基础色
-                theme: ThemeProvider().getTheme(),
-                darkTheme: ThemeProvider().getTheme(isDarkMode: true),
-                themeMode: ThemeProvider().getThemeMode(),
+                theme: themeProvider.getTheme(),
+                darkTheme: themeProvider.getTheme(isDarkMode: true),
+                themeMode: themeProvider.getThemeMode(),
                 home: widget2,
               );
             },

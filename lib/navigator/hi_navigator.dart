@@ -99,6 +99,10 @@ class HiNavigator extends _RouteJumpListener {
     return _instance!;
   }
 
+  RouteStatusInfo? getCurrent() {
+    return _current;
+  }
+
   //*  ------------------------------ */
   //*  方法
   ///首页底部tab切换监听

@@ -1,9 +1,11 @@
 import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/hi_navigator.dart';
+import 'package:bili/provider/theme_provider.dart';
 import 'package:bili/util/format_util.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:provider/provider.dart';
 
 class VideoCard extends StatelessWidget {
   final VideoModel videoMo;
@@ -11,6 +13,8 @@ class VideoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = context.watch<ThemeProvider>();
+    Color textColor = themeProvider.isDark() ? Colors.white70 : Colors.black87;
     return InkWell(
       onTap: () {
         HiNavigator.getInstance()
@@ -28,7 +32,7 @@ class VideoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _itemImage(context),
-                _infoView(),
+                _infoView(textColor),
               ],
             ),
           ),
@@ -104,7 +108,7 @@ class VideoCard extends StatelessWidget {
   }
 
   /// info -- title
-  _infoView() {
+  _infoView(Color textColor) {
     return Expanded(
         child: Container(
       padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
@@ -116,16 +120,16 @@ class VideoCard extends StatelessWidget {
             videoMo.title ?? "没有videoMo.title",
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 10, color: Colors.black87),
+            style: TextStyle(fontSize: 10, color: textColor),
           ),
-          _owner()
+          _owner(textColor)
         ],
       ),
     ));
   }
 
   /// 作者...
-  _owner() {
+  _owner(Color textcolor) {
     var owner = videoMo.owner;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,7 +148,7 @@ class VideoCard extends StatelessWidget {
               padding: EdgeInsets.only(left: 5),
               child: Text(
                 owner?.name ?? "noName",
-                style: TextStyle(fontSize: 10, color: Colors.black),
+                style: TextStyle(fontSize: 10, color: textcolor),
               ),
             ),
           ],

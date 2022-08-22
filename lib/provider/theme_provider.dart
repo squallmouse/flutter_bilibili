@@ -1,6 +1,7 @@
 import 'package:bili/db/hi_cache.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/hi_constants.dart';
+import 'package:bili/util/my_log.dart';
 import 'package:flutter/material.dart';
 
 extension ThemeModeExtension on ThemeMode {
@@ -9,6 +10,12 @@ extension ThemeModeExtension on ThemeMode {
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode? _themeMode;
+
+  /// 判断是不是 dark mode
+  bool isDark() {
+    myLog("判断-->>++::1 (${_themeMode == ThemeMode.dark})", StackTrace.current);
+    return _themeMode == ThemeMode.dark;
+  }
 
   /// 获取主题模式
   ThemeMode getThemeMode() {
@@ -24,7 +31,8 @@ class ThemeProvider extends ChangeNotifier {
         _themeMode = ThemeMode.system;
         break;
     }
-    return ThemeMode.dark;
+    myLog("判断-->>++::2", StackTrace.current);
+    _themeMode = ThemeMode.dark;
     return _themeMode!;
   }
 
@@ -40,6 +48,9 @@ class ThemeProvider extends ChangeNotifier {
       brightness: isDarkMode ? Brightness.dark : Brightness.light,
       errorColor: isDarkMode ? HiColor.dark_red : HiColor.red,
       primaryColor: isDarkMode ? HiColor.dark_bg : themeColorWhite,
+      appBarTheme: AppBarTheme(
+        backgroundColor: isDarkMode ? HiColor.dark_bg : themeColorWhite,
+      ),
       // tab 指示器的颜色
       indicatorColor: isDarkMode ? primary[50] : themeColorWhite,
       // 页面背景色
