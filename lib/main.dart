@@ -8,12 +8,14 @@ import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
 import 'package:bili/page/video_detail_page.dart';
+import 'package:bili/provider/hi_Provider.dart';
 import 'package:bili/provider/theme_provider.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bili/util/color.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(BiliApp());
@@ -43,16 +45,27 @@ class _BiliAppState extends State<BiliApp> {
         } else {
           widget2 = Scaffold(body: CupertinoActivityIndicator());
         }
-        return MaterialApp(
-          title: "啥bilibili...",
-          debugShowCheckedModeBanner: false,
+        return MultiProvider(
+          providers: topProvider,
+          child: Consumer<ThemeProvider>(
+            builder: (
+              BuildContext context,
+              ThemeProvider themeProvider,
+              Widget? child,
+            ) {
+              return MaterialApp(
+                title: "啥bilibili...",
+                debugShowCheckedModeBanner: false,
 
-          // primaryColor的值是一个Color类型的，为所有的Widget 提供基础颜色；
-          // primarySwatch的值是一个MaterialColor类型，而不是Color类型的，主要为Material 系列组件提供基础色
-          theme: ThemeProvider().getTheme(),
-          darkTheme: ThemeProvider().getTheme(isDarkMode: true),
-          themeMode: ThemeProvider().getThemeMode(),
-          home: widget2,
+                // primaryColor的值是一个Color类型的，为所有的Widget 提供基础颜色；
+                // primarySwatch的值是一个MaterialColor类型，而不是Color类型的，主要为Material 系列组件提供基础色
+                theme: ThemeProvider().getTheme(),
+                darkTheme: ThemeProvider().getTheme(isDarkMode: true),
+                themeMode: ThemeProvider().getThemeMode(),
+                home: widget2,
+              );
+            },
+          ),
         );
       },
     );
