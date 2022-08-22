@@ -1,3 +1,6 @@
+import 'package:bili/barrage/barrage_input.dart';
+import 'package:bili/barrage/hi_barrage.dart';
+import 'package:bili/barrage/hi_socket.dart';
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/favorite_dao.dart';
 import 'package:bili/http/dao/like_dao.dart';
@@ -7,6 +10,7 @@ import 'package:bili/model/video_detail_model.dart';
 import 'package:bili/page/favorites_refersh_page.dart';
 import 'package:bili/util/color.dart';
 import 'package:bili/util/format_util.dart';
+import 'package:bili/util/hi_constants.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/toast.dart';
@@ -19,6 +23,7 @@ import 'package:bili/widget/video_toolbar.dart';
 import 'package:bili/widget/video_view.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay/flutter_overlay.dart';
 
 import '../model/owner.dart';
 
@@ -38,15 +43,28 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   /// video_detail_list
   late List<VideoModel> videoList = [];
 
+  /// 弹幕 key
+  var _barrageKey = GlobalKey<HiBarrageState>();
+
+  /// 输入框显示
+  bool _inoutShowing = false;
+
   /// video_detail 视频 详情页的数据
   VideoDetailModel? videoDetailModel;
   late TabController _tabController;
   final List<String> tabbarTitles = ["简介", "评论"];
+
+  /// HiSocket
+  // late HiSocket _hiSocket;
+
+  //*  ------------------------------ */
+  //*  methods
   @override
   void initState() {
     super.initState();
     videoModel = widget.argumentsMap["mode"];
     _tabController = TabController(length: tabbarTitles.length, vsync: this);
+    // 获取数据
     _loadData();
   }
 
@@ -117,6 +135,12 @@ class _VideoDetailPageState extends State<VideoDetailPage>
       url: videoModel.url ?? "",
       cover: videoModel.cover ?? "",
       overlayUI: videoAppBar(),
+      barrageUI: HiBarrage(
+        key: _barrageKey,
+        vid: videoModel.vid!,
+        // headers: HiConstants.headers(),
+        autoPlay: true,
+      ),
     );
   }
 
@@ -137,9 +161,14 @@ class _VideoDetailPageState extends State<VideoDetailPage>
             _tabbar,
             Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.live_tv_rounded,
-                color: Colors.grey,
+              child: InkWell(
+                onTap: () {
+                  _buildOverlay();
+                },
+                child: Icon(
+                  Icons.live_tv_rounded,
+                  color: Colors.grey,
+                ),
               ),
             )
           ],
@@ -299,9 +328,24 @@ class _VideoDetailPageState extends State<VideoDetailPage>
 
   /// 详情页下面的 videolist
   _buildVideoList() {
-    //TODO :
     return videoList.map((VideoModel mo) {
       return VideoDetailCard(videoModel: mo);
     }).toList();
+  }
+
+  void _buildOverlay() {
+    setState(() {
+      _inoutShowing = true;
+    });
+    HiOverlay.show(context, child: BarrageInput(
+      onTabClose: () {
+        setState(() {
+          _inoutShowing = false;
+        });
+      },
+    )).then((value) {
+      print("---->> input : ${value}");
+      _barrageKey.currentState?.send(value);
+    });
   }
 }
