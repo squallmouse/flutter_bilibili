@@ -31,7 +31,8 @@ class _NavigationBarMyState extends State<NavigationBarMy> {
 
   /// 沉浸式状态栏
   void _statusBarInit() {
-    changeStatusBarColor(statusbgColor: _color, contentColor: _statusStyle);
+    changeStatusBarColor(
+        context: context, statusbgColor: _color, contentColor: _statusStyle);
   }
 
   @override

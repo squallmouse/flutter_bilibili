@@ -74,7 +74,10 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   void _statusbarInit() {
     //ios xia
     changeStatusBarColor(
-        statusbgColor: Colors.black, contentColor: StatusBarContentColor.LIGHT);
+      context: context,
+      statusbgColor: Colors.black,
+      contentColor: StatusBarContentColor.LIGHT,
+    );
   }
 
   void _loadData() async {

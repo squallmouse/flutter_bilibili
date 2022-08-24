@@ -48,12 +48,12 @@ void changeStatusBarColor({
       statusbgColor = HiColor.dark_bg;
     }
   }
-  // var themeProvider = context.watch<ThemeProvider>();
-  // myLog("isDark ==> ${themeProvider.isDark()}", StackTrace.current);
+
   var page = HiNavigator.getInstance().getCurrent()?.page;
   if (routeStatus == RouteStatus.home) {
   } else {
     if (page is ProfilePage) {
+      myLog("个人页颜色", StackTrace.current);
       statusbgColor = Colors.transparent;
     } else if (page is VideoDetailPage) {
       contentColor = StatusBarContentColor.LIGHT;
@@ -82,18 +82,19 @@ void changeStatusBarColor({
     StatusBarStyle.DARK_CONTENT ==> 文字是黑色
     StatusBarStyle.LIGHT_CONTENT ==> 文字颜色白色
     */
-  if (Platform.isIOS) {
-    // statusBarStyle = StatusBarStyle.LIGHT_CONTENT;
-  } else {
-    await FlutterStatusbarcolor.setStatusBarColor(statusbgColor, animate: true);
-    if (useWhiteForeground(statusbgColor)) {
-      myLog("用了白的背景色", StackTrace.current);
-      // FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
-    } else {
-      myLog("用了黑的背景色", StackTrace.current);
-      // FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
-    }
-  }
+  // if (Platform.isIOS) {
+  //   // statusBarStyle = StatusBarStyle.LIGHT_CONTENT;
+  // } else {
+  //   await FlutterStatusbarcolor.setStatusBarColor(statusbgColor, animate: true);
+  //   if (useWhiteForeground(statusbgColor)) {
+  //     myLog("用了白的背景色", StackTrace.current);
+  //     // FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+  //   } else {
+  //     myLog("用了黑的背景色", StackTrace.current);
+  //     // FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+  //   }
+  // }
+
   await FlutterStatusbarcolor.setStatusBarColor(statusbgColor, animate: true);
   if (useWhiteForeground(statusbgColor)) {
     myLog("状态栏字体颜色是白色,", StackTrace.current);

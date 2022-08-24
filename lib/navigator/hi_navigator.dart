@@ -1,5 +1,6 @@
 import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/bottom_navigator.dart';
+import 'package:bili/page/dark_mode_page.dart';
 import 'package:bili/page/home_page.dart';
 import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
@@ -49,6 +50,8 @@ RouteStatus getStatus(MaterialPage page) {
     return RouteStatus.home;
   } else if (page.child is VideoDetailPage) {
     return RouteStatus.detail;
+  } else if (page.child is DarkModePage) {
+    return RouteStatus.darkMode;
   } else {
     return RouteStatus.unknow;
   }

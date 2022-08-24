@@ -4,6 +4,7 @@ import 'package:bili/core/hi_state.dart';
 import 'package:bili/http/dao/home_dao.dart';
 import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/hi_navigator.dart';
+import 'package:bili/page/dark_mode_page.dart';
 import 'package:bili/page/home_tab_page.dart';
 import 'package:bili/page/profile_page.dart';
 import 'package:bili/page/video_detail_page.dart';
@@ -61,7 +62,8 @@ class _HomePageState extends HiState<HomePage>
         break;
       case AppLifecycleState.resumed: //从后台切换到了前台
         myLog("从后台切换到了前台", StackTrace.current);
-        changeStatusBarColor(contentColor: StatusBarContentColor.DARK);
+        changeStatusBarColor(
+            contentColor: StatusBarContentColor.DARK, context: context);
         break;
       case AppLifecycleState.paused: // 界面不可见,在后台
         myLog("界面不可见,在后台", StackTrace.current);
@@ -99,10 +101,14 @@ class _HomePageState extends HiState<HomePage>
         myLog("返回到首页", StackTrace.current);
         // var statusStyle = StatusBarContentColor.DARK;
         changeStatusBarColor(
+          context: context,
           statusbgColor: Colors.white,
           contentColor: StatusBarContentColor.DARK,
           routeStatus: RouteStatus.home,
         );
+      } else if (pre?.page is DarkModePage && (current.page is ProfilePage)) {
+        myLog("from : DarkMode返回到个人页", StackTrace.current);
+        changeStatusBarColor(context: context);
       }
     });
     _loadData();
