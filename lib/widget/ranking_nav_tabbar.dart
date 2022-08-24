@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-class RankingTabbar extends StatefulWidget {
-  RankingTabbar({Key? key}) : super(key: key);
+// class RankingTabbar extends StatefulWidget {
+//   RankingTabbar({Key? key}) : super(key: key);
 
-  @override
-  State<RankingTabbar> createState() => _RankingTabbarState();
-}
+//   @override
+//   State<RankingTabbar> createState() => _RankingTabbarState();
+// }
 
-class _RankingTabbarState extends State<RankingTabbar> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
+// class _RankingTabbarState extends State<RankingTabbar> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }

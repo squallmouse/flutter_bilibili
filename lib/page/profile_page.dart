@@ -1,6 +1,8 @@
 import 'package:bili/http/core/hi_error.dart';
 import 'package:bili/http/dao/profile_dao.dart';
 import 'package:bili/model/profile_model.dart';
+import 'package:bili/navigator/hi_navigator.dart';
+import 'package:bili/provider/theme_provider.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/widget/benefit_card.dart';
 import 'package:bili/widget/course_card.dart';
@@ -8,6 +10,7 @@ import 'package:bili/widget/hi_banner.dart';
 import 'package:bili/widget/hi_blur.dart';
 import 'package:bili/widget/hi_flexible_header.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 ///我的
 class ProfilePage extends StatefulWidget {
@@ -19,11 +22,12 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with AutomaticKeepAliveClientMixin {
-  //
+  //*  ------------------------------ */
+  //*  属性
   ProfileModel? profileModel;
   late ScrollController scrollController;
   //*  ------------------------------ */
-  //*
+  //*   methods
   @override
   void initState() {
     super.initState();
@@ -164,6 +168,8 @@ class _ProfilePageState extends State<ProfilePage>
       _buildCourseCell(),
       // 增值服务
       _buildBenefitCell(),
+      // 夜间模式
+      _buildDarkModeCell(),
     ];
   }
 
@@ -183,7 +189,35 @@ class _ProfilePageState extends State<ProfilePage>
     return CourseCard(courseList: profileModel!.courseList!);
   }
 
+  /// 增值服务
   _buildBenefitCell() {
     return BenefitCard(benefitList: profileModel!.benefitList!);
+  }
+
+  /// 夜间模式
+  _buildDarkModeCell() {
+    var theme = context.read<ThemeProvider>().getThemeMode();
+    return InkWell(
+      onTap: () {
+        HiNavigator.getInstance().onJumpTo(RouteStatus.darkMode);
+      },
+      child: Container(
+        padding: EdgeInsets.only(top: 10, left: 10, right: 5),
+        child: Row(
+          children: [
+            Text(
+              "夜间模式",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 8),
+            Icon(
+              theme == ThemeMode.dark
+                  ? Icons.nightlight_round_sharp
+                  : Icons.sunny,
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -86,7 +86,7 @@ class _ExpandableContentState extends State<ExpandableContent>
 
   /// 标题 可点击
   _titleView() {
-    var _textstyle = TextStyle(color: Colors.black, fontSize: 20);
+    var _textstyle = TextStyle(fontSize: 20);
     return [
       InkWell(
         onTap: _onTap,

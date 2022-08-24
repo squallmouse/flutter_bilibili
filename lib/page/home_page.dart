@@ -5,6 +5,9 @@ import 'package:bili/http/dao/home_dao.dart';
 import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/hi_navigator.dart';
 import 'package:bili/page/home_tab_page.dart';
+import 'package:bili/page/profile_page.dart';
+import 'package:bili/page/video_detail_page.dart';
+import 'package:bili/provider/theme_provider.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/view_utils.dart';
 import 'package:bili/widget/hi_tab.dart';
@@ -12,6 +15,7 @@ import 'package:bili/widget/home_navigation.dart';
 import 'package:bili/widget/loading_container.dart';
 import 'package:bili/widget/navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   // late final ValueChanged<VideoModel> onJumpToDetail;
@@ -57,9 +61,7 @@ class _HomePageState extends HiState<HomePage>
         break;
       case AppLifecycleState.resumed: //从后台切换到了前台
         myLog("从后台切换到了前台", StackTrace.current);
-
-        changeStatusBarColor(statusBarTheme: StatusBarTheme.DARK);
-
+        changeStatusBarColor(contentColor: StatusBarContentColor.DARK);
         break;
       case AppLifecycleState.paused: // 界面不可见,在后台
         myLog("界面不可见,在后台", StackTrace.current);
@@ -68,6 +70,13 @@ class _HomePageState extends HiState<HomePage>
         myLog("app结束调用", StackTrace.current);
         break;
     }
+  }
+
+  /// 监听系统dark mode 变化
+  @override
+  void didChangePlatformBrightness() {
+    context.read<ThemeProvider>().darkModeChange();
+    super.didChangePlatformBrightness();
   }
 
   @override
@@ -79,11 +88,21 @@ class _HomePageState extends HiState<HomePage>
     _tabController = TabController(length: _categoryList.length, vsync: this);
     HiNavigator.getInstance().addListener(this.listener = (current, pre) {
       // myLog("homePage-->current:${current.page}", StackTrace.current);
-      // myLog("homePage-->pre:${pre?.page}", StackTrace.current);
-      if (widget == current.page || current.page is HomePage) {
-        // myLog("打开了首页:onResume", StackTrace.current);
-      } else if (widget == pre?.page || pre?.page is HomePage) {
-        // myLog("首页:onPause", StackTrace.current);
+      // // myLog("homePage-->pre:${pre?.page}", StackTrace.current);
+      // if (widget == current.page || current.page is HomePage) {
+      //   // myLog("打开了首页:onResume", StackTrace.current);
+      // } else if (widget == pre?.page || pre?.page is HomePage) {
+      //   // myLog("首页:onPause", StackTrace.current);
+      // }
+      // 当页面返回到首页恢复首页的状态栏样式
+      if (pre?.page is VideoDetailPage && !(current.page is ProfilePage)) {
+        myLog("返回到首页", StackTrace.current);
+        // var statusStyle = StatusBarContentColor.DARK;
+        changeStatusBarColor(
+          statusbgColor: Colors.white,
+          contentColor: StatusBarContentColor.DARK,
+          routeStatus: RouteStatus.home,
+        );
       }
     });
     _loadData();

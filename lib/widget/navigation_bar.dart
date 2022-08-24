@@ -5,10 +5,10 @@ import 'package:bili/util/view_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-enum StatusBarTheme { LIGHT, DARK, SYSTEM }
+enum StatusBarContentColor { LIGHT, DARK, SYSTEM }
 
 class NavigationBarMy extends StatefulWidget {
-  final StatusBarTheme statusBarTheme;
+  final StatusBarContentColor statusBarTheme;
   final double contentHieght;
   final Widget child;
   final Color statusColor;
@@ -17,7 +17,7 @@ class NavigationBarMy extends StatefulWidget {
       this.contentHieght = 46.0,
       required this.child,
       this.statusColor = Colors.white,
-      this.statusBarTheme = StatusBarTheme.LIGHT})
+      this.statusBarTheme = StatusBarContentColor.DARK})
       : super(key: key);
   // NavigationBarMy({Key? key}) : super(key: key);
 
@@ -31,7 +31,7 @@ class _NavigationBarMyState extends State<NavigationBarMy> {
 
   /// 沉浸式状态栏
   void _statusBarInit() {
-    changeStatusBarColor(statusColor: _color, statusBarTheme: _statusStyle);
+    changeStatusBarColor(statusbgColor: _color, contentColor: _statusStyle);
   }
 
   @override
@@ -40,7 +40,7 @@ class _NavigationBarMyState extends State<NavigationBarMy> {
     var themeProvider = context.watch<ThemeProvider>();
     if (themeProvider.isDark()) {
       _color = HiColor.dark_bg;
-      _statusStyle = StatusBarTheme.LIGHT;
+      _statusStyle = StatusBarContentColor.LIGHT;
     } else {
       _color = widget.statusColor;
       _statusStyle = widget.statusBarTheme;

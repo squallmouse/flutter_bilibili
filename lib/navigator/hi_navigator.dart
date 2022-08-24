@@ -35,6 +35,7 @@ enum RouteStatus {
   registration,
   home,
   detail,
+  darkMode,
   unknow,
 }
 
@@ -158,9 +159,10 @@ class HiNavigator extends _RouteJumpListener {
 // _current 上一次打开的页面
     myLog("hi_navigator-->pre --> 上一次打开的页面:${_current?.page}",
         StackTrace.current);
-    _listeners.forEach((element) {
+
+    _listeners.forEach((listener) {
       // 通知_listener列表中所有的监听方法 新老页面
-      element(current, _current);
+      listener(current, _current);
     });
     _current = current;
   }

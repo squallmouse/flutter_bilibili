@@ -5,6 +5,7 @@ import 'package:bili/model/home_model.dart';
 
 import 'package:bili/navigator/bottom_navigator.dart';
 import 'package:bili/navigator/hi_navigator.dart';
+import 'package:bili/page/dark_mode_page.dart';
 import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
 import 'package:bili/page/video_detail_page.dart';
@@ -146,6 +147,8 @@ class BiliRouteDelegate extends RouterDelegate
       page = pageWrap(RegistrationPage());
     } else if (routeStatus == RouteStatus.login) {
       page = pageWrap(LoginPage());
+    } else if (routeStatus == RouteStatus.darkMode) {
+      page = pageWrap(DarkModePage());
     }
     //
     tempPages = [...tempPages, page];
