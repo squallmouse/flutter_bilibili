@@ -1,6 +1,8 @@
+import 'package:bili/provider/theme_provider.dart';
 import 'package:bili/util/color.dart';
 import 'package:flutter/material.dart';
 import 'package:underline_indicator/underline_indicator.dart';
+import 'package:provider/provider.dart';
 
 class MyTabBarNav extends StatelessWidget {
   final TabController tabController;
@@ -26,13 +28,16 @@ class MyTabBarNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = context.watch<ThemeProvider>();
+    var _unselectedLabelColor =
+        themeProvider.isDark() ? Colors.white70 : this.unselectedColor;
     return TabBar(
       tabs: this.childs ?? _createTabs(),
       labelColor: this.labelColor,
       onTap: this.onTapFn,
       isScrollable: true,
       controller: this.tabController,
-      unselectedLabelColor: this.unselectedColor,
+      unselectedLabelColor: _unselectedLabelColor,
       indicator: UnderlineIndicator(
         strokeCap: StrokeCap.round, // Set your line endings.
         borderSide: BorderSide(

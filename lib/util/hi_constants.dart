@@ -7,6 +7,8 @@ class HiConstants {
   static String courseFlagK = "course-flag";
   static String courseFlagV = "fa";
 
+  static const theme = "hi_theme";
+
   static headers() {
     Map<String, dynamic> header = {
       HiConstants.authTokenK: HiConstants.authTokenV,

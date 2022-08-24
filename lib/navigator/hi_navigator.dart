@@ -1,5 +1,6 @@
 import 'package:bili/model/home_model.dart';
 import 'package:bili/navigator/bottom_navigator.dart';
+import 'package:bili/page/dark_mode_page.dart';
 import 'package:bili/page/home_page.dart';
 import 'package:bili/page/login_page.dart';
 import 'package:bili/page/registration_page.dart';
@@ -35,6 +36,7 @@ enum RouteStatus {
   registration,
   home,
   detail,
+  darkMode,
   unknow,
 }
 
@@ -48,6 +50,8 @@ RouteStatus getStatus(MaterialPage page) {
     return RouteStatus.home;
   } else if (page.child is VideoDetailPage) {
     return RouteStatus.detail;
+  } else if (page.child is DarkModePage) {
+    return RouteStatus.darkMode;
   } else {
     return RouteStatus.unknow;
   }
@@ -97,6 +101,10 @@ class HiNavigator extends _RouteJumpListener {
       _instance = HiNavigator._();
     }
     return _instance!;
+  }
+
+  RouteStatusInfo? getCurrent() {
+    return _current;
   }
 
   //*  ------------------------------ */
@@ -154,9 +162,10 @@ class HiNavigator extends _RouteJumpListener {
 // _current 上一次打开的页面
     myLog("hi_navigator-->pre --> 上一次打开的页面:${_current?.page}",
         StackTrace.current);
-    _listeners.forEach((element) {
+
+    _listeners.forEach((listener) {
       // 通知_listener列表中所有的监听方法 新老页面
-      element(current, _current);
+      listener(current, _current);
     });
     _current = current;
   }

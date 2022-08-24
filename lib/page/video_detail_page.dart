@@ -14,9 +14,11 @@ import 'package:bili/util/hi_constants.dart';
 import 'package:bili/util/image_cached.dart';
 import 'package:bili/util/my_log.dart';
 import 'package:bili/util/toast.dart';
+import 'package:bili/util/view_utils.dart';
 import 'package:bili/widget/appbar.dart';
 import 'package:bili/widget/expandable_content.dart';
 import 'package:bili/widget/hi_tab.dart';
+import 'package:bili/widget/navigation_bar.dart';
 import 'package:bili/widget/video_card.dart';
 import 'package:bili/widget/video_list_card.dart';
 import 'package:bili/widget/video_toolbar.dart';
@@ -62,10 +64,20 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   @override
   void initState() {
     super.initState();
+    _statusbarInit();
     videoModel = widget.argumentsMap["mode"];
     _tabController = TabController(length: tabbarTitles.length, vsync: this);
     // 获取数据
     _loadData();
+  }
+
+  void _statusbarInit() {
+    //ios xia
+    changeStatusBarColor(
+      context: context,
+      statusbgColor: Colors.black,
+      contentColor: StatusBarContentColor.LIGHT,
+    );
   }
 
   void _loadData() async {
@@ -93,7 +105,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   Widget build(BuildContext context) {
     // videoModel = widget.argumentsMap["mode"];
     // myLog("message = ${videoModel}", StackTrace.current);
-    // changeStatusBarColor(statusBarTheme: StatusBarTheme.DARK);
+
     //状态栏高度
     double top = MediaQuery.of(context).padding.top;
     return Scaffold(
